@@ -1,0 +1,11 @@
+https://localhost:5001 ==> Identity Service
+https://localhost:5002 ==> User Service
+https://localhost:5003 ==> Chat Service
+https://localhost:5004 ==> Notification Service
+
+
+https://localhost:5010 ==> API Gateway
+https://localhost:5020 ==> Event Bus Orchestrator
+
+
+
