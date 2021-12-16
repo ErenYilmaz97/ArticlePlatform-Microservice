@@ -46,7 +46,11 @@ namespace Microservices.EventOrchestrator.EventOrchestratorPublisher
             catch (Exception)
             {
                 //Mesaj Publish Edilemedi. Dbye Kayıt Üretilebilir, Hangfire tarafından scheduler tetiklenebilir
-            }          
+            }
+            finally
+            {
+                this.DisposeConnection();
+            }
 
         }
 
@@ -72,6 +76,14 @@ namespace Microservices.EventOrchestrator.EventOrchestratorPublisher
                 _connection = _connectionFactory.CreateConnection();
                 _channel = _connection.CreateModel();
             }
+        }
+
+
+        private void DisposeConnection()
+        {
+            this._connection.Close();
+            this._connection.Dispose();
+            this._channel.Dispose();
         }
     }
 }

@@ -14,8 +14,4 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\Microservices.Domain.Core\Microservices.Domain.Core.csproj" />
-  </ItemGroup>
-
 </Project>
