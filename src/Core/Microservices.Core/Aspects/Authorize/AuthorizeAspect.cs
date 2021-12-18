@@ -3,8 +3,10 @@ using Microservices.Core.Constants;
 using Microservices.Core.Dtos;
 using Microservices.Core.Enum;
 using Microservices.Core.Utilities.Interceptor;
+using Microservices.Core.Utilities.IoC;
 using Microservices.Core.Utilities.Result;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +26,19 @@ namespace Microservices.Core.Aspects.Authorize
         private readonly HttpClient _httpClient;
         private AuthenticationType _authType;
 
-        public AuthorizeAspect(PermissionType permissionType)
+
+        public AuthorizeAspect(PermissionType permissionType):this()
         {
-            this._permission = permissionType;
-            this._contextAccessor = null;  //Service Provider tarafıdndan gelecek
+            this._permission = permissionType;          
         }
+
 
         public AuthorizeAspect()
         {
-            this._contextAccessor = null;
+            this._contextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
+            this._httpClient = ServiceTool.ServiceProvider.GetService<HttpClient>();
         }
+
 
 
         public override async void Intercept(IInvocation invocation)
@@ -51,12 +56,14 @@ namespace Microservices.Core.Aspects.Authorize
             {
                 bool isValid = true;
                 string clientId = _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                string clientSecret = _contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "client-secret")?.Value;
 
-                if (string.IsNullOrEmpty(clientId)) throw new AuthenticationException("Invalid Token.");
+                if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret)) throw new AuthenticationException("Invalid Token.");
 
                 var request = new ValidateClientRequest()
                 {
-                    ClientId = clientId
+                    ClientId = clientId,
+                    ClientSecret = clientSecret
                 };
 
                 var validateClientResponse = _httpClient.PostAsJsonAsync<ValidateClientRequest>(MicroservicesConstants.AuthenticateClientEndpoint, request).GetAwaiter().GetResult();
