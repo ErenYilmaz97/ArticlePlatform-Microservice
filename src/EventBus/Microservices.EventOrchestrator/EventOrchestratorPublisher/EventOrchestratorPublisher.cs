@@ -84,6 +84,7 @@ namespace Microservices.EventOrchestrator.EventOrchestratorPublisher
             this._connection.Close();
             this._connection.Dispose();
             this._channel.Dispose();
+            this._connectionFactory = null;
         }
     }
 }

@@ -21,6 +21,11 @@ namespace Microservices.Core.UnitOfWork
             this._context.SaveChanges();
         }
 
+        public async Task CommitChangesAsync()
+        {
+            await this._context.SaveChangesAsync();
+        }
+
         public void Dispose()
         {
             this.Dispose();

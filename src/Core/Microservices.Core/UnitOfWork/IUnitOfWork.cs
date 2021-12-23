@@ -9,5 +9,6 @@ namespace Microservices.Core.UnitOfWork
     public interface IUnitOfWork : IDisposable
     {
         void CommitChanges();
+        Task CommitChangesAsync();
     }
 }
