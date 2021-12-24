@@ -40,7 +40,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.EventOrchestr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.EventBus.Publisher", "src\EventBus\Microservices.EventBus.Publisher\Microservices.EventBus.Publisher.csproj", "{A015A18E-0CDD-4D1F-8D04-21999987DDF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Core", "src\Core\Microservices.Core\Microservices.Core.csproj", "{D71A0224-C20E-473E-9696-38B8F5C6663A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Core", "src\Core\Microservices.Core\Microservices.Core.csproj", "{D71A0224-C20E-473E-9696-38B8F5C6663A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Identity.Application", "Microservice.Identity.Application\Microservice.Identity.Application.csproj", "{3080AB04-7362-40C4-8CF9-79EC313FD344}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Identity.Domain", "Microservice.Identity.Domain\Microservice.Identity.Domain.csproj", "{CF01F2AD-49B0-475B-AA52-848F980EB23D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservice.Identity.Infrastructure", "Microservice.Identity.Infrastructure\Microservice.Identity.Infrastructure.csproj", "{E4C768DA-587B-4703-915E-1C25758EAA58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +86,18 @@ Global
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3080AB04-7362-40C4-8CF9-79EC313FD344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3080AB04-7362-40C4-8CF9-79EC313FD344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3080AB04-7362-40C4-8CF9-79EC313FD344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3080AB04-7362-40C4-8CF9-79EC313FD344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF01F2AD-49B0-475B-AA52-848F980EB23D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF01F2AD-49B0-475B-AA52-848F980EB23D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF01F2AD-49B0-475B-AA52-848F980EB23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF01F2AD-49B0-475B-AA52-848F980EB23D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C768DA-587B-4703-915E-1C25758EAA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C768DA-587B-4703-915E-1C25758EAA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C768DA-587B-4703-915E-1C25758EAA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C768DA-587B-4703-915E-1C25758EAA58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +119,9 @@ Global
 		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627} = {1950B748-0EBE-4393-85A8-20AF2760917F}
 		{A015A18E-0CDD-4D1F-8D04-21999987DDF9} = {1950B748-0EBE-4393-85A8-20AF2760917F}
 		{D71A0224-C20E-473E-9696-38B8F5C6663A} = {2CEA4980-7FD9-4877-B72D-7BE6B1E0CFCA}
+		{3080AB04-7362-40C4-8CF9-79EC313FD344} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
+		{CF01F2AD-49B0-475B-AA52-848F980EB23D} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
+		{E4C768DA-587B-4703-915E-1C25758EAA58} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0747AB50-AC07-4831-8C40-7B440EC15F02}

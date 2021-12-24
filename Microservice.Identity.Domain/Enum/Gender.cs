@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservices.Core.Entity
+namespace Microservice.Identity.Domain.Enum
 {
-    internal interface ISoftDeletableEntity 
+    public enum Gender
     {
-        public bool IsDeleted { get; set; }
+        Man = 1,
+        Woman,
+        Other
     }
 }

@@ -14,4 +14,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Microservices.Core\Microservices.Core.csproj" />
+    <ProjectReference Include="..\..\..\EventBus\Microservices.EventOrchestrator\Microservices.EventOrchestrator.csproj" />
+  </ItemGroup>
+
 </Project>

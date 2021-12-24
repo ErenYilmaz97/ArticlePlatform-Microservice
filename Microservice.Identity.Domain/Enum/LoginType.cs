@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservices.Core.Entity
+namespace Microservice.Identity.Domain.Enum
 {
-    internal interface ISoftDeletableEntity 
+    public enum LoginType
     {
-        public bool IsDeleted { get; set; }
+        DefaultLogin = 1,
+        RefreshTokenLogin 
     }
 }

@@ -17,6 +17,7 @@ namespace Microservices.Core.CrossCuttingConcerns.Caching.Redis
         public RedisCache(RedisConfiguration redisConfiguration)
         {
             this._redisConfiguration = redisConfiguration;
+            this.StartConnection();
         }
 
 

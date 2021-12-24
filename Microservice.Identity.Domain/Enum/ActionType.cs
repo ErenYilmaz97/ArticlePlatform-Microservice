@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservices.Core.Entity
+namespace Microservice.Identity.Domain.Enum
 {
-    internal interface ISoftDeletableEntity 
+    public enum ActionType
     {
-        public bool IsDeleted { get; set; }
     }
 }
