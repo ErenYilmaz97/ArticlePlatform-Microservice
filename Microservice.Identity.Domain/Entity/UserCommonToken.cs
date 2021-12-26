@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Microservice.Identity.Domain.Entity
 {
-    public class UserCommonToken : SoftDeletableEntity<long>
+    //UserCommonToken Kayıtlarına HardDelete Uygulanmalı
+    public class UserCommonToken : Entity<long>
     {
         public string UserId { get; set; }
         public TokenType TokenType { get; set; }
