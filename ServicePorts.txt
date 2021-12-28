@@ -1,4 +1,4 @@
-https://localhost:5001 ==> Identity Service
+https://localhost:5001 ==> Identity Service (Uses 0. Redis DB)
 https://localhost:5002 ==> User Service
 https://localhost:5003 ==> Chat Service
 https://localhost:5004 ==> Notification Service

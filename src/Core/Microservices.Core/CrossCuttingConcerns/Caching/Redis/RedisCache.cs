@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace Microservices.Core.CrossCuttingConcerns.Caching.Redis
         private IConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
 
-        public RedisCache(RedisConfiguration redisConfiguration)
+        public RedisCache(IOptions<RedisConfiguration> redisConfig)
         {
-            this._redisConfiguration = redisConfiguration;
+            this._redisConfiguration = redisConfig.Value;
             this.StartConnection();
         }
 
@@ -25,7 +26,7 @@ namespace Microservices.Core.CrossCuttingConcerns.Caching.Redis
         private void StartConnection()
         {
             var redisOptions = new ConfigurationOptions()
-            {
+            {             
                 EndPoints = { _redisConfiguration.Host, _redisConfiguration.Port },
                 DefaultDatabase = _redisConfiguration.DbIndex  //Her Microservis için farklı
             };
@@ -37,7 +38,7 @@ namespace Microservices.Core.CrossCuttingConcerns.Caching.Redis
             }
             catch (Exception)
             {
-                throw new ApplicationException("Redise Bağlantı Kurulamadı.");
+                throw new ApplicationException("IdentityService - Redise Bağlantı Kurulamadı.");
             }
         }
 

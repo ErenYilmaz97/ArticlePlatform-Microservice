@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservices.Core.Entity
+namespace Microservice.Identity.Application.Caching
 {
-    public interface ISoftDeletableEntity 
+    public interface IIdentityCache
     {
-        public bool IsDeleted { get; set; }
     }
 }

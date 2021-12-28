@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Caching\" />
-    <Folder Include="Logging\" />
     <Folder Include="UnitOfWork\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microservice.Identity.Domain\Microservice.Identity.Domain.csproj" />
   </ItemGroup>
 
 </Project>

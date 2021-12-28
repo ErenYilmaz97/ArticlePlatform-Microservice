@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservices.Core.Context
+namespace Microservice.Identity.Domain.Context
 {
     public class EfDbContext : DbContext
     {
-        public EfDbContext(DbContextOptions<EfDbContext> opts):base(opts)
+        public EfDbContext(DbContextOptions<IdentityDbContext> opts) : base(opts)
         {
 
         }
-
 
 
         //Sync
@@ -40,23 +39,23 @@ namespace Microservices.Core.Context
 
             foreach (var entry in entries)
             {
-                if( (entry.State == EntityState.Deleted) && (entry is ISoftDeletableEntity entity))
+                if ((entry.State == EntityState.Deleted) && (entry is ISoftDeletableEntity entity))
                 {
                     //Entity softdeletable ise softdelete, yoksa harddelete uygulanıyor.
                     entry.State = EntityState.Unchanged;
                     entity.IsDeleted = true;
                 }
 
-                else if((entry.State == EntityState.Added))
+                else if ((entry.State == EntityState.Added))
                 {
-                    if(entry is IEntity<string> guidEntity)
+                    if (entry is IEntity<string> guidEntity)
                     {
                         guidEntity.Id = Guid.NewGuid().ToString();
                         guidEntity.Created = DateTime.Now;
                     }
 
                     else if (entry is IEntity<long> numEntity)
-                    {                       
+                    {
                         numEntity.Created = DateTime.Now;
                     }
                 }
