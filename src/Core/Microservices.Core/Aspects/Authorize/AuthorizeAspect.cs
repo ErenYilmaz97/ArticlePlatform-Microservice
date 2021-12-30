@@ -20,7 +20,6 @@ namespace Microservices.Core.Aspects.Authorize
 {
     public class AuthorizeAspect : MethodInterceptor
     {
-        //TODO : PermissionType
         private PermissionType _permission;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly HttpClient _httpClient;

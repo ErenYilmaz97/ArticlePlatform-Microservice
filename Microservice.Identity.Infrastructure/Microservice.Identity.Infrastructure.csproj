@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Mapper\Mapster\" />
     <Folder Include="UnitOfWork\" />
     <Folder Include="Service\" />
     <Folder Include="Repository\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using FluentValidation.AspNetCore;
 using Microservice.Identity.Application.Caching;
 using Microservice.Identity.Domain.Context;
 using Microservice.Identity.Domain.IoC;
@@ -8,7 +9,11 @@ using Microservices.Core.CrossCuttingConcerns.Caching;
 using Microservices.Core.CrossCuttingConcerns.Caching.Redis;
 using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Mircoservice.Identity.API;
+using Mircoservice.Identity.API.Extension;
+using Mircoservice.Identity.API.Filter;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Debugging;
 using Serilog.Events;
@@ -23,42 +28,50 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("RedisOptions"));
 
-// Add services to the container.
+#region IoC Container
 builder.Services.AddDbContext<IdentityDbContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnectionString")));
 builder.Services.AddSingleton<IIdentityCache, IdentityCache>();
-builder.Services.AddSingleton<ICache, RedisCache>();
-
-//TODO : Start Redis Connection While Starting Up The Proejct.
-//TODO : Write Serilog Configuration Extension, For Clean Code.
-
-#region Serilog Configuration
-Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithMachineName()
-                .Enrich.WithProperty("Enviroment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
-                .MinimumLevel.Debug()
-                .Filter.ByExcluding(Matching.FromSource("Microsoft"))
-                .Filter.ByExcluding(Matching.FromSource("System"))
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(builder.Configuration.GetValue<string>("ElasticSearch:Uri")))
-                {
-                    AutoRegisterTemplate = true,
-                    DetectElasticsearchVersion = true,
-                    RegisterTemplateFailure = RegisterTemplateRecovery.IndexAnyway,
-                    TemplateName = "serilog-identityservice-template",
-                    IndexFormat = $"identityservicelogs-{DateTime.UtcNow:yyyy.MM.dd}",
-                    MinimumLogEventLevel = LogEventLevel.Information,
-                    BufferBaseFilename = builder.Configuration.GetValue<string>("ElasticSearch:BufferFilePath"),
-                    BatchPostingLimit = 10000,
-                    BufferFileSizeLimitBytes = 10 * 1024 * 1024,  //10mb
-                    ConnectionTimeout = TimeSpan.FromSeconds(15000)
-                })
-    .CreateLogger();
-
-builder.Host.UseSerilog();
+builder.Services.AddSingleton<ICache>(serviceProvider =>
+{
+    var redisConfig = serviceProvider.GetRequiredService<IOptions<RedisConfiguration>>().Value;
+    var redisCache = new RedisCache(redisConfig);
+    return redisCache;
+});
 
 #endregion
 
-builder.Services.AddControllers();
+
+#region Serilog Configuration
+builder.ConfigureSeriogLogger();
+#endregion
+
+#region AutoMapper Configuration
+builder.AddAutoMapperConfiguration();
+#endregion
+
+
+builder.Services.AddControllers(opts =>
+                {
+                    opts.Filters.Add(typeof(ValidationFilter));
+                })
+
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    //AUTO VALIDATION DISABLED
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+
+                .AddNewtonsoftJson(o =>
+                {
+                    //INCLUDE
+                    o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                })
+                .AddFluentValidation(config =>
+                {
+                    //config.RegisterValidatorsFromAssemblyContaining<CreateCourseRequestValidator>();
+                });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

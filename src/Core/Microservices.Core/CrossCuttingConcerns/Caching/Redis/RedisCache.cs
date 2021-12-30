@@ -15,20 +15,20 @@ namespace Microservices.Core.CrossCuttingConcerns.Caching.Redis
         private IConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
 
-        public RedisCache(IOptions<RedisConfiguration> redisConfig)
+        public RedisCache(RedisConfiguration redisConfig)
         {
-            this._redisConfiguration = redisConfig.Value;
+            this._redisConfiguration = redisConfig;
             this.StartConnection();
         }
 
 
 
-        private void StartConnection()
+        public void StartConnection()
         {
             var redisOptions = new ConfigurationOptions()
             {             
                 EndPoints = { _redisConfiguration.Host, _redisConfiguration.Port },
-                DefaultDatabase = _redisConfiguration.DbIndex  //Her Microservis için farklı
+                DefaultDatabase = _redisConfiguration.DbIndex  //Her Microservis için farklı Db Kullanıyoruz.
             };
 
             try

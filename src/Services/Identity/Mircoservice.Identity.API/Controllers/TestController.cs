@@ -31,9 +31,25 @@ namespace Mircoservice.Identity.API.Controllers
         [Route("LogTest")]
         public IActionResult LogTest()
         {
-            this._logger.LogInformation("TestController Loged");
-            this._logger.LogInformation("{@LogObject} Logged" , new LogObject() { Value1 = "TestController", Value2 = "TestController", Value3 = 10});
+            this._logger.LogInformation("TestController Loged");          
             this._logger.LogInformation("{@LogObject} Logged" , new {Value1 = "Anonymus Type", Value2 = "Anonymus Type", Value3 = 20});
+
+            return Ok();
+        }
+
+
+        [HttpGet]
+        [Route("ErrorLogTest")]
+        public IActionResult ErrorLogTest()
+        {
+            try
+            {
+                throw new ApplicationException("Test Exception");
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("{@Exception} Failed." ,ex);
+            }
 
             return Ok();
         }
