@@ -177,6 +177,7 @@ namespace Microservice.Identity.Domain.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TokenType = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsValid = table.Column<bool>(type: "bit", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false)

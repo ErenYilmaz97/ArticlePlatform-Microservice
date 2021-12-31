@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Mapper\Mapster\" />
-    <Folder Include="UnitOfWork\" />
     <Folder Include="Service\" />
-    <Folder Include="Repository\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,6 +12,7 @@ namespace Microservice.Identity.Domain.Entity
     {
         public string UserId { get; set; }
         public TokenType TokenType { get; set; }
+        public string Value { get; set; }
         public DateTime ExpireDate { get; set; }
         public bool IsValid { get; set; }
 

@@ -20,6 +20,7 @@ namespace Microservice.Identity.Domain.EntityConfigurations
 
             builder.Property(x => x.UserId).IsRequired();
             builder.Property(x => x.TokenType).IsRequired();
+            builder.Property(x => x.Value).IsRequired();
             builder.Property(x => x.ExpireDate).IsRequired();
             builder.Property(x => x.IsValid).IsRequired();
 

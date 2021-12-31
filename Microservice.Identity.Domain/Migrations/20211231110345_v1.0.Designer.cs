@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microservice.Identity.Domain.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20211228135121_v1.0")]
+    [Migration("20211231110345_v1.0")]
     partial class v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -266,6 +266,10 @@ namespace Microservice.Identity.Domain.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

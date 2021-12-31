@@ -2,9 +2,14 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Microservice.Identity.Application.Caching;
+using Microservice.Identity.Application.Repository;
+using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Context;
 using Microservice.Identity.Domain.IoC;
 using Microservice.Identity.Infrastructure.Caching;
+using Microservice.Identity.Infrastructure.Repository.Dapper;
+using Microservice.Identity.Infrastructure.Repository.EntityFramework;
+using Microservice.Identity.Infrastructure.UnitOfWork;
 using Microservices.Core.CrossCuttingConcerns.Caching;
 using Microservices.Core.CrossCuttingConcerns.Caching.Redis;
 using Microservices.Core.CrossCuttingConcerns.Logging;
@@ -29,9 +34,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("RedisOptions"));
 
 #region IoC Container
-builder.Services.AddDbContext<IdentityDbContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnectionString")));
-builder.Services.AddSingleton<IIdentityCache, IdentityCache>();
-builder.Services.AddSingleton<ICache>(serviceProvider =>
+builder.Services.AddDbContext<IdentityDbContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnectionString")), ServiceLifetime.Transient);
+builder.Services.AddTransient<IIdentityUnitOfWork, IdentityUnitOfWork>();
+builder.Services.AddTransient<IIdentityCache, IdentityCache>();
+
+builder.Services.AddSingleton<ICache>(serviceProvider =>  //Connect Once, and Use Permanently
 {
     var redisConfig = serviceProvider.GetRequiredService<IOptions<RedisConfiguration>>().Value;
     var redisCache = new RedisCache(redisConfig);
