@@ -1,7 +1,9 @@
 ﻿using Microservice.Identity.Application.Caching;
+using Microservice.Identity.Domain.Exception;
 using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mircoservice.Identity.API.Validator.Test;
 using Serilog;
 
 namespace Mircoservice.Identity.API.Controllers
@@ -52,6 +54,23 @@ namespace Mircoservice.Identity.API.Controllers
             }
 
             return Ok();
+        }
+
+
+
+        [HttpPost]
+        [Route("ValidationTest")]
+        public IActionResult ValidatioTest(TestRequest request)
+        {
+            return Ok("Model is Valid.");
+        }
+
+
+        [HttpGet]
+        [Route("ErrorResponseTest")]
+        public IActionResult ErrorResponseTest()
+        {
+            throw new BusinessException("Test Exception");
         }
     }
 }

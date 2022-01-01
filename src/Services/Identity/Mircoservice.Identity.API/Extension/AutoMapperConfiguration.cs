@@ -1,4 +1,5 @@
 ﻿using Microservice.Identity.Infrastructure.Mapper.AutoMapper;
+using Microsoft.AspNetCore.Builder;
 
 namespace Mircoservice.Identity.API.Extension
 {

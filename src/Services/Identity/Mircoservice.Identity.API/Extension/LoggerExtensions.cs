@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.Elasticsearch;

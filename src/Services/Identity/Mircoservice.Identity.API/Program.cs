@@ -3,12 +3,15 @@ using Autofac.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using Microservice.Identity.Application.Caching;
 using Microservice.Identity.Application.Repository;
+using Microservice.Identity.Application.Service;
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Context;
+using Microservice.Identity.Domain.CustomMiddleware;
 using Microservice.Identity.Domain.IoC;
 using Microservice.Identity.Infrastructure.Caching;
 using Microservice.Identity.Infrastructure.Repository.Dapper;
 using Microservice.Identity.Infrastructure.Repository.EntityFramework;
+using Microservice.Identity.Infrastructure.Service;
 using Microservice.Identity.Infrastructure.UnitOfWork;
 using Microservices.Core.CrossCuttingConcerns.Caching;
 using Microservices.Core.CrossCuttingConcerns.Caching.Redis;
@@ -18,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Mircoservice.Identity.API;
 using Mircoservice.Identity.API.Extension;
 using Mircoservice.Identity.API.Filter;
+using Mircoservice.Identity.API.Validator;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Debugging;
@@ -45,6 +49,15 @@ builder.Services.AddSingleton<ICache>(serviceProvider =>  //Connect Once, and Us
     return redisCache;
 });
 
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IPermissionService, PermissionService>();
+builder.Services.AddTransient<IPermissionGroupService, PermissionGroupService>();
+builder.Services.AddTransient<ILoginHistoryService, LoginHistoryService>();
+builder.Services.AddTransient<IUserActionHistoryService, UserActionHistoryService>();
+builder.Services.AddTransient<IUserCommonTokenService, UserCommonTokenService>();
+builder.Services.AddTransient<ISubscribedClientService, SubscribedClientService>();
+
 #endregion
 
 
@@ -64,19 +77,19 @@ builder.Services.AddControllers(opts =>
 
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    //AUTO VALIDATION DISABLED
+                    //Auto Validation Disabled
                     options.SuppressModelStateInvalidFilter = true;
                 })
 
                 .AddNewtonsoftJson(o =>
                 {
-                    //INCLUDE
+                    //ReferenceLoop
                     o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 })
                 .AddFluentValidation(config =>
                 {
-                    //config.RegisterValidatorsFromAssemblyContaining<CreateCourseRequestValidator>();
-                });
+                    config.RegisterValidatorsFromAssemblyContaining<TestValidator>();
+                }); 
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -84,7 +97,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+var redisCache = app.Services.GetRequiredService<ICache>();
+
+
+
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

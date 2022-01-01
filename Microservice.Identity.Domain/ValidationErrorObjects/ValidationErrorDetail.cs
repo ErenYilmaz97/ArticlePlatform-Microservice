@@ -20,7 +20,8 @@ namespace Microservice.Identity.Domain.ValidationErrorObjects
 
         public ValidationErrorDetail(string fieldName, List<string> validationErrors)
         {
-
+            this.FieldName = fieldName;
+            this.ValidationErrors = validationErrors;
         }
      
     }

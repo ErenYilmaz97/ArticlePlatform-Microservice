@@ -24,10 +24,10 @@ namespace Mircoservice.Identity.API.Filter
                 List<ValidationErrorDetail> validationErrorDetails = 
                     context.ModelState.Where(x => x.Value.Errors.Count > 0).Select(x => new ValidationErrorDetail(x.Key, x.Value.Errors.Select(x => x.ErrorMessage).ToList())).ToList();
 
-                ValidationError validationError = new ValidationError("Validation Error", 400, validationErrorDetails);
+                ValidationError validationError = new ValidationError(validationErrorDetails);
 
                 //Will Handle In ExceptionHandler Middleware
-                throw new Microservice.Identity.Domain.Exception.ValidationException(validationError);
+                throw new Microservice.Identity.Domain.Exception.ValidationException("Validation Error" ,validationError);
             }
         }
 

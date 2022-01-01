@@ -43,14 +43,14 @@ namespace Microservice.Identity.Infrastructure.UnitOfWork
 
 
         #region Lazy Objects
-        public Lazy<IUserRepository> UserRepository { get; set; }
-        public Lazy<IRoleRepository> RoleRepository { get; set; }
-        public Lazy<IPermissionRepository> PermissionRepository { get; set; }
-        public Lazy<IPermissionGroupRepository> PermissionGroupRepository { get; set; }
-        public Lazy<ILoginHistoryRepository> LoginHistoryRepository { get; set; }
-        public Lazy<IUserActionHistoryRepository> UserActionHistoryRepository { get; set; }
-        public Lazy<IUserCommonTokenRepository> UserCommonTokenRepository { get; set; }
-        public Lazy<ISubscribedClientRepository> SubscribedClientRepository { get; set; }
+        public Lazy<IUserRepository> UserRepository { get;}
+        public Lazy<IRoleRepository> RoleRepository { get;}
+        public Lazy<IPermissionRepository> PermissionRepository { get;}
+        public Lazy<IPermissionGroupRepository> PermissionGroupRepository { get;}
+        public Lazy<ILoginHistoryRepository> LoginHistoryRepository { get;}
+        public Lazy<IUserActionHistoryRepository> UserActionHistoryRepository { get;}
+        public Lazy<IUserCommonTokenRepository> UserCommonTokenRepository { get;}
+        public Lazy<ISubscribedClientRepository> SubscribedClientRepository { get;}
         #endregion
     }
 }

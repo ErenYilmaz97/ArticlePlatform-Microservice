@@ -1,4 +1,5 @@
 ﻿using Microservice.Identity.Domain.ValidationErrorObjects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,18 @@ namespace Microservice.Identity.Domain.Exception
     public class ValidationException : System.Exception
     {
         public ValidationError ValidationError { get; set; }
+        public string Message { get; set; }
 
-        public ValidationException(ValidationError validationError)
+        public ValidationException(string message,ValidationError validationError)
         {
+            this.Message = message;
             this.ValidationError = validationError;
         }
 
-        public ValidationException()
-        {
 
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }
