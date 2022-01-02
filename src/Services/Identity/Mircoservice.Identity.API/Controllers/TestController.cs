@@ -72,5 +72,13 @@ namespace Mircoservice.Identity.API.Controllers
         {
             throw new BusinessException("Test Exception");
         }
+
+
+        [HttpGet]
+        [Route("InternalErrorResponseTest")]
+        public IActionResult InternalErrorResponseTest()
+        {
+            throw new ApplicationException("Internal Error Test");
+        }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using Microservice.Identity.Domain.Exception;
+using Microservice.Identity.Domain.ValidationErrorObjects;
+using Microservices.Core.Utilities.Result;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +17,9 @@ namespace Microservice.Identity.Domain.Extension
         {
             response.StatusCode = 400;
             response.ContentType = "application/json";
+            ControllerResponse<ValidationError> responseObject = new() { ResultCode = ResultCodes.Failed, ResultMessage = exception.Message , Data = exception.ValidationError}; 
 
-            return response.WriteAsync(exception.ToString());
+            return response.WriteAsync(responseObject.ToString());
         }
 
 
@@ -24,8 +28,9 @@ namespace Microservice.Identity.Domain.Extension
         {
             response.StatusCode = 400;
             response.ContentType = "application/json";
+            ControllerResponse<object> responseObject = new() { ResultCode = ResultCodes.Failed, ResultMessage = exception.Message };
 
-            return response.WriteAsync(exception.Message);
+            return response.WriteAsync(responseObject.ToString());
         }
 
 
@@ -34,8 +39,8 @@ namespace Microservice.Identity.Domain.Extension
         {
             httpResponse.StatusCode = 400;
             httpResponse.ContentType = "application/json";
-
-            return httpResponse.WriteAsync("Sunucu Kaynaklı Bir Hata Oluştu.");
+            ControllerResponse<object> responseObject = new() { ResultCode = ResultCodes.Failed, ResultMessage = "Internal Error"};
+            return httpResponse.WriteAsync(responseObject.ToString());
         }
     }
 }
