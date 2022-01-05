@@ -72,6 +72,7 @@ builder.AddAutoMapperConfiguration();
 
 builder.Services.AddControllers(opts =>
                 {
+                    opts.Filters.Add(typeof(LogTrackFilter));
                     opts.Filters.Add(typeof(ValidationFilter));
                 })
 

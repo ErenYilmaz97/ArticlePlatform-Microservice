@@ -1,6 +1,7 @@
 ﻿using Microservice.Identity.Application.Caching;
 using Microservice.Identity.Domain.Exception;
 using Microservices.Core.CrossCuttingConcerns.Logging;
+using Microservices.Core.Utilities.BaseController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mircoservice.Identity.API.Validator.Test;
@@ -10,7 +11,7 @@ namespace Mircoservice.Identity.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class TestController : CustomController
     {
         private readonly IIdentityCache _cache;
         private readonly ILogger<TestController> _logger;
@@ -24,7 +25,7 @@ namespace Mircoservice.Identity.API.Controllers
 
         [HttpGet]
         public IActionResult TestAction()
-        {           
+        {
             return Ok("Worked");
         }
 
