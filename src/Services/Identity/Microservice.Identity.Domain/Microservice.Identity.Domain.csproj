@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Core\Microservices.Core\Microservices.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Microservices.Core\Microservices.Core.csproj" />
   </ItemGroup>
 
 </Project>

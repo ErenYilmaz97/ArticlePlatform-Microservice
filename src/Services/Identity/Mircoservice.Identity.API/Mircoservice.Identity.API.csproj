@@ -18,10 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Microservice.Identity.Application\Microservice.Identity.Application.csproj" />
-    <ProjectReference Include="..\..\..\..\Microservice.Identity.Infrastructure\Microservice.Identity.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Core\Microservices.Core\Microservices.Core.csproj" />
     <ProjectReference Include="..\..\..\EventBus\Microservices.EventOrchestrator\Microservices.EventOrchestrator.csproj" />
+    <ProjectReference Include="..\Microservice.Identity.Application\Microservice.Identity.Application.csproj" />
+    <ProjectReference Include="..\Microservice.Identity.Infrastructure\Microservice.Identity.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
