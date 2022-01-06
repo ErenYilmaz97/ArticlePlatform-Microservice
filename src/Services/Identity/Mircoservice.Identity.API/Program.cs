@@ -7,7 +7,6 @@ using Microservice.Identity.Application.Service;
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Context;
 using Microservice.Identity.Domain.CustomMiddleware;
-using Microservice.Identity.Domain.IoC;
 using Microservice.Identity.Infrastructure.Caching;
 using Microservice.Identity.Infrastructure.Repository.Dapper;
 using Microservice.Identity.Infrastructure.Repository.EntityFramework;

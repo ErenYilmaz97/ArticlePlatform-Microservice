@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservice.Identity.Domain.IoC
+namespace Microservice.Identity.Infrastructure.IoC
 {
     public class IdentityDependencyResolver : Module
     {
