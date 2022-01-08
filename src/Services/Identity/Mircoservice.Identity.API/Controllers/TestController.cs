@@ -1,9 +1,13 @@
 ﻿using Microservice.Identity.Application.Caching;
+using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Exception;
+using Microservice.Identity.Infrastructure.Helper;
+using Microservice.Identity.Infrastructure.Model;
 using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microservices.Core.Utilities.BaseController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Mircoservice.Identity.API.Validator.Test;
 using Serilog;
 
@@ -15,11 +19,13 @@ namespace Mircoservice.Identity.API.Controllers
     {
         private readonly IIdentityCache _cache;
         private readonly ILogger<TestController> _logger;
+        private readonly TokenOptions _tokenOptions;
 
-        public TestController(IIdentityCache cache, ILogger<TestController> logger)
+        public TestController(IIdentityCache cache, ILogger<TestController> logger, IOptions<TokenOptions> tokenOptions)
         {
             this._cache = cache;
             _logger = logger;
+            _tokenOptions = tokenOptions.Value;
         }
 
 
@@ -80,6 +86,17 @@ namespace Mircoservice.Identity.API.Controllers
         public IActionResult InternalErrorResponseTest()
         {
             throw new ApplicationException("Internal Error Test");
+        }
+
+
+        [HttpGet]
+        [Route("JwtHelperTest")]
+        public IActionResult JwtHelperTest()
+        {
+            
+            var token = JwtHelper.CreateUserAccessToken(new User(), _tokenOptions);
+            var token2 = JwtHelper.CreateClientAccessToken(new SubscribedClient(), _tokenOptions);
+            return Ok();
         }
     }
 }

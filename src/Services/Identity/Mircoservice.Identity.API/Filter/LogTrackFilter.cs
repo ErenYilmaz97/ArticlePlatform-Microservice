@@ -4,7 +4,7 @@ namespace Mircoservice.Identity.API.Filter
 {
     public class LogTrackFilter : IActionFilter
     {
-        public void OnActionExecuted(ActionExecutedContext context)
+        public void OnActionExecuting(ActionExecutingContext context)
         {
             string logTrackId = context.HttpContext.Request.Headers["logTrackId"];
 
@@ -14,9 +14,12 @@ namespace Mircoservice.Identity.API.Filter
             }
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+
+        public void OnActionExecuted(ActionExecutedContext context)
         {
-            
+           
         }
+
+        
     }
 }

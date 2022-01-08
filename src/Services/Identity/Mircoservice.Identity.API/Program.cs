@@ -8,6 +8,7 @@ using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Context;
 using Microservice.Identity.Domain.CustomMiddleware;
 using Microservice.Identity.Infrastructure.Caching;
+using Microservice.Identity.Infrastructure.Model;
 using Microservice.Identity.Infrastructure.Repository.Dapper;
 using Microservice.Identity.Infrastructure.Repository.EntityFramework;
 using Microservice.Identity.Infrastructure.Service;
@@ -35,6 +36,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("RedisOptions"));
+builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("JwtOptions"));
 
 #region IoC Container
 builder.Services.AddDbContext<IdentityDbContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnectionString")), ServiceLifetime.Transient);
@@ -72,7 +74,7 @@ builder.AddAutoMapperConfiguration();
 builder.Services.AddControllers(opts =>
                 {
                     opts.Filters.Add(typeof(LogTrackFilter));
-                    opts.Filters.Add(typeof(ValidationFilter));
+                    opts.Filters.Add(typeof(ValidationFilter));                
                 })
 
                 .ConfigureApiBehaviorOptions(options =>

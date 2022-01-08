@@ -33,28 +33,31 @@ namespace Microservice.Identity.Domain.CustomMiddleware
             }
             catch (System.Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex, logTrackId);
             }
         }
 
 
-        private Task HandleExceptionAsync(HttpContext context, System.Exception ex)
-        {
-            this._logger.LogError(ex.Message);
-            this._logger.LogError("{@exception}", ex);
-
+        private Task HandleExceptionAsync(HttpContext context, System.Exception ex, string logTrackId)
+        {          
             if (ex is ValidationException validationException)
             {
+                var validationErrorLog = new { logTrackId = logTrackId, exceptionMessage = validationException.ValidationError.ToString() };
+                this._logger.LogError("Validation Error Occurred. {@errorLogObject}", validationErrorLog);
                 return context.Response.ReturnValidationErrorResponse(validationException);
             }
 
             if(ex is BusinessException businessException)
             {
+                var businessErrorLog = new { logTrackId = logTrackId, exceptionMessage = businessException.Message};
+                this._logger.LogError("Business Error Occurred. {@errorLogObject}", businessErrorLog);
                 return context.Response.ReturnBusinessErrorResponse(businessException);
             }
 
 
-            return context.Response.InternalServerErrorResponse();
+            var errorLogObject = new { logTrackId = logTrackId, exceptionMessage = ex.Message };
+            this._logger.LogError("Unexpected Error Occurred. {@errorLogObject}", errorLogObject);
+            return context.Response.InternalServerErrorResponse(ex);
         }
     }
 }

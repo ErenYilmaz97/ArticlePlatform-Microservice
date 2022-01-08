@@ -35,11 +35,11 @@ namespace Microservice.Identity.Domain.Extension
 
 
 
-        public static Task InternalServerErrorResponse(this HttpResponse httpResponse)
+        public static Task InternalServerErrorResponse(this HttpResponse httpResponse, System.Exception exception)
         {
             httpResponse.StatusCode = 400;
             httpResponse.ContentType = "application/json";
-            ControllerResponse<object> responseObject = new() { ResultCode = ResultCodes.Failed, ResultMessage = "Internal Error"};
+            ControllerResponse<object> responseObject = new() { ResultCode = ResultCodes.Failed, ResultMessage = exception.Message};
             return httpResponse.WriteAsync(responseObject.ToString());
         }
     }
