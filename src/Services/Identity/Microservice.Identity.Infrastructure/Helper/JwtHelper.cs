@@ -1,5 +1,5 @@
 ﻿using Microservice.Identity.Domain.Entity;
-using Microservice.Identity.Infrastructure.Model;
+using Microservice.Identity.Domain.Model;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;

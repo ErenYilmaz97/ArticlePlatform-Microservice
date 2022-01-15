@@ -1,8 +1,8 @@
 ﻿using Microservice.Identity.Application.Caching;
 using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Exception;
+using Microservice.Identity.Domain.Model;
 using Microservice.Identity.Infrastructure.Helper;
-using Microservice.Identity.Infrastructure.Model;
 using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microservices.Core.Utilities.BaseController;
 using Microsoft.AspNetCore.Http;

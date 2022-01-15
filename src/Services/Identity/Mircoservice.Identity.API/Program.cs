@@ -7,8 +7,8 @@ using Microservice.Identity.Application.Service;
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Context;
 using Microservice.Identity.Domain.CustomMiddleware;
+using Microservice.Identity.Domain.Model;
 using Microservice.Identity.Infrastructure.Caching;
-using Microservice.Identity.Infrastructure.Model;
 using Microservice.Identity.Infrastructure.Repository.Dapper;
 using Microservice.Identity.Infrastructure.Repository.EntityFramework;
 using Microservice.Identity.Infrastructure.Service;
@@ -58,6 +58,8 @@ builder.Services.AddTransient<ILoginHistoryService, LoginHistoryService>();
 builder.Services.AddTransient<IUserActionHistoryService, UserActionHistoryService>();
 builder.Services.AddTransient<IUserCommonTokenService, UserCommonTokenService>();
 builder.Services.AddTransient<ISubscribedClientService, SubscribedClientService>();
+builder.Services.AddTransient<IBusinessValidatorService, BusinessValidatorService>();
+builder.Services.AddTransient<IIdentityService, IdentityService>();
 
 #endregion
 

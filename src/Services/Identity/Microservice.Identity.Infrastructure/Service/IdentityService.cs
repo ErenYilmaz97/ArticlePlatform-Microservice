@@ -1,5 +1,6 @@
 ﻿using Microservice.Identity.Application.Service;
-using Microservice.Identity.Domain.Model.User;
+using Microservice.Identity.Domain.Model;
+using Microservice.Identity.Domain.Model.Identity;
 using Microservices.Core.Utilities.Result.Business;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace Microservice.Identity.Infrastructure.Service
 {
-    public class UserService : IUserService
+    public class IdentityService : IIdentityService
     {
-        public async Task<IBusinessResult> ConfirmEmail(ConfirmEmailRequest request)
+        public Task<IBusinessDataResult<ClientToken>> LoginClient(ClientLoginRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IBusinessResult> ForgotPassword(ForgotPasswordRequest request)
+        public Task<IBusinessDataResult<UserToken>> LoginUser(UserLoginRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IBusinessResult> ResetPassword(ResetPasswordRequest request)
+        public Task<IBusinessResult> Register(RegisterRequest request)
         {
             throw new NotImplementedException();
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microservice.Identity.Infrastructure.Model
+namespace Microservice.Identity.Domain.Model
 {
     public class TokenOptions
     {
