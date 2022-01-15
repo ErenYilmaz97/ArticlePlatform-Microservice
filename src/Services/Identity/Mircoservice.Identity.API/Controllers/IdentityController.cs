@@ -47,6 +47,7 @@ namespace Mircoservice.Identity.API.Controllers
         #endregion
 
 
+
        
         [HttpPost]
         [Route("User/Login")]
@@ -76,7 +77,36 @@ namespace Mircoservice.Identity.API.Controllers
 
 
 
-       
+
+        [HttpPost]
+        [Route("Login/RefreshToken")]
+        #region Login (Refresh Token) Endpoint
+        public async Task<IActionResult> LoginWithRefreshToken(RefreshTokenLoginRequest request)
+        {
+            request.LogTrackId = base.GetLogTrackIdFromHeader();
+            var serviceResult = await _identityService.LoginWithRefreshToken(request);
+
+            if (serviceResult.ResultCode == ResultCodes.Success)
+            {
+                return Ok(new ControllerResponse<UserToken>()
+                {
+                    ResultCode = serviceResult.ResultCode,
+                    ResultMessage = serviceResult.ResultMessage,
+                    Data = serviceResult.Data
+                });
+            }
+
+            return BadRequest(new ControllerResponse<UserToken>()
+            {
+                ResultCode = serviceResult.ResultCode,
+                ResultMessage = serviceResult.ResultMessage
+            });
+        }
+        #endregion
+
+
+
+
         [HttpPost]
         [Route("Client/Login")]
         #region Client Login Endpoint

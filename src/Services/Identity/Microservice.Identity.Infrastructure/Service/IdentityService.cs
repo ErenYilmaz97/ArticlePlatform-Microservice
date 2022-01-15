@@ -22,6 +22,11 @@ namespace Microservice.Identity.Infrastructure.Service
             throw new NotImplementedException();
         }
 
+        public Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IBusinessResult> Register(RegisterRequest request)
         {
             throw new NotImplementedException();

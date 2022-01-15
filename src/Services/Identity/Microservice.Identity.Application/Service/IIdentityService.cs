@@ -13,6 +13,7 @@ namespace Microservice.Identity.Application.Service
     {
         public Task<IBusinessResult> Register(RegisterRequest request);
         public Task<IBusinessDataResult<UserToken>> LoginUser(UserLoginRequest request);
+        public Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request);
         public Task<IBusinessDataResult<ClientToken>> LoginClient(ClientLoginRequest request);
 
     }

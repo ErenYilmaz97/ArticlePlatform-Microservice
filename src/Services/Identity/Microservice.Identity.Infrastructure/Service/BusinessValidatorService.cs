@@ -30,6 +30,11 @@ namespace Microservice.Identity.Infrastructure.Service
             throw new NotImplementedException();
         }
 
+        public IBusinessResult ExecuteLoginWithRefreshTokenRules()
+        {
+            throw new NotImplementedException();
+        }
+
         public IBusinessResult ExecuteRegisterRules()
         {
             throw new NotImplementedException();

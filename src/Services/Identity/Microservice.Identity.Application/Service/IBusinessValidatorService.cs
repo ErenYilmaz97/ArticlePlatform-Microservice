@@ -15,6 +15,7 @@ namespace Microservice.Identity.Application.Service
         public IBusinessResult ExecuteForgotPasswordRules();
         public IBusinessResult ExecuteResetPasswordRules();
         public IBusinessResult ExecuteLoginUserRules();
+        public IBusinessResult ExecuteLoginWithRefreshTokenRules();
         public IBusinessResult ExecuteLoginClientRules();
         #endregion
     }
