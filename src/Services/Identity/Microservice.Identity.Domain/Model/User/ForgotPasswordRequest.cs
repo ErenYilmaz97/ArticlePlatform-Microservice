@@ -8,5 +8,6 @@ namespace Microservice.Identity.Domain.Model.User
 {
     public class ForgotPasswordRequest : RequestBase
     {
+        public string Email { get; set; }
     }
 }

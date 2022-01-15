@@ -10,13 +10,13 @@ namespace Microservice.Identity.Application.Service
     public interface IBusinessValidatorService
     {
         #region Proje içerisinde yürütülecek olan business kuralları
-        public IBusinessResult ExecuteRegisterRules();
-        public IBusinessResult ExecuteConfirmEmailRules();
-        public IBusinessResult ExecuteForgotPasswordRules();
-        public IBusinessResult ExecuteResetPasswordRules();
-        public IBusinessResult ExecuteLoginUserRules();
-        public IBusinessResult ExecuteLoginWithRefreshTokenRules();
-        public IBusinessResult ExecuteLoginClientRules();
+        public Task<IBusinessResult> ExecuteRegisterRules();
+        public Task<IBusinessResult> ExecuteConfirmEmailRules();
+        public Task<IBusinessResult> ExecuteForgotPasswordRules();
+        public Task<IBusinessResult> ExecuteResetPasswordRules();
+        public Task<IBusinessResult> ExecuteLoginUserRules();
+        public Task<IBusinessResult> ExecuteLoginWithRefreshTokenRules();
+        public Task<IBusinessResult> ExecuteLoginClientRules();
         #endregion
     }
 }

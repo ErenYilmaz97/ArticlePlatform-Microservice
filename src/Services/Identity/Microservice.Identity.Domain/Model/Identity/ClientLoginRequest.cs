@@ -8,5 +8,7 @@ namespace Microservice.Identity.Domain.Model.Identity
 {
     public class ClientLoginRequest : RequestBase
     {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }

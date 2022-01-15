@@ -8,5 +8,7 @@ namespace Microservice.Identity.Domain.Model.User
 {
     public class ConfirmEmailRequest : RequestBase
     {
+        public string UserId { get; set; }
+        public string ConfirmEmailToken { get; set; }
     }
 }

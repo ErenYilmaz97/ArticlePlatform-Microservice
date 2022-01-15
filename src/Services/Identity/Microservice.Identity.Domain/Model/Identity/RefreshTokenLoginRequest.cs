@@ -8,5 +8,6 @@ namespace Microservice.Identity.Domain.Model.Identity
 {
     public class RefreshTokenLoginRequest : RequestBase
     {
+        public string RefreshToken { get; set; }
     }
 }

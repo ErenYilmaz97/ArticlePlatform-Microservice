@@ -8,5 +8,9 @@ namespace Microservice.Identity.Domain.Model.User
 {
     public class ResetPasswordRequest : RequestBase
     {
+        public string UserId { get; set; }
+        public string ResetPasswordToken { get; set; }
+        public string NewPassword { get; set; }
+        public string NewPasswordConfirm { get; set; }
     }
 }

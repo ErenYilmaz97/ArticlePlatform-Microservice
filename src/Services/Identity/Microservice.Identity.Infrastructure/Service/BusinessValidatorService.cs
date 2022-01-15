@@ -10,37 +10,37 @@ namespace Microservice.Identity.Infrastructure.Service
 {
     public class BusinessValidatorService : IBusinessValidatorService
     {
-        public IBusinessResult ExecuteConfirmEmailRules()
+        public Task<IBusinessResult> ExecuteConfirmEmailRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteForgotPasswordRules()
+        public Task<IBusinessResult> ExecuteForgotPasswordRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteLoginClientRules()
+        public Task<IBusinessResult> ExecuteLoginClientRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteLoginUserRules()
+        public Task<IBusinessResult> ExecuteLoginUserRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteLoginWithRefreshTokenRules()
+        public Task<IBusinessResult> ExecuteLoginWithRefreshTokenRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteRegisterRules()
+        public Task<IBusinessResult> ExecuteRegisterRules()
         {
             throw new NotImplementedException();
         }
 
-        public IBusinessResult ExecuteResetPasswordRules()
+        public Task<IBusinessResult> ExecuteResetPasswordRules()
         {
             throw new NotImplementedException();
         }
