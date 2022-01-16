@@ -19,5 +19,11 @@ namespace Mircoservice.Identity.API.BaseValidator
 
             return result;
         }
+
+
+        protected bool NotNullOrEmpty(string input)
+        {
+            return !string.IsNullOrEmpty(input);
+        }
     }
 }

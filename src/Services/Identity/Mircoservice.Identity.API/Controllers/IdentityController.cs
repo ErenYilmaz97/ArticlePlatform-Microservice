@@ -19,6 +19,7 @@ namespace Mircoservice.Identity.API.Controllers
             _identityService = identityService;
         }
 
+
        
         [HttpPost]
         [Route("Register")]
