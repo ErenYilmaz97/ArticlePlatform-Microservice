@@ -2,6 +2,7 @@
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Exception;
 using Microservice.Identity.Domain.Model.Identity;
+using Microservice.Identity.Domain.Model.User;
 using Microservice.Identity.Infrastructure.Helper;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,7 @@ namespace Microservice.Identity.Infrastructure.Service
             _logger = logger;
             _uow = uow;
         }
+
 
         public async Task ExecuteRegisterRules(RegisterRequest request)
         {
@@ -102,10 +104,46 @@ namespace Microservice.Identity.Infrastructure.Service
 
 
 
-        public Task ExecuteConfirmEmailRules()
+        public async Task ExecuteConfirmEmailRules(ConfirmEmailRequest request)
         {
-            throw new NotImplementedException();
+            #region Checking Business Rules
+
+            #region Is Token Exist
+            var token = await _uow.UserCommonTokens.GetAsync(filter: x => x.Value == request.ConfirmEmailToken);
+
+            if(token is null)
+            {
+                throw new BusinessException("Email Confirmation Token Not Found.");
+            }
+            #endregion 
+
+            #region Is Token Belong To The User?
+            if(token.UserId != request.UserId)
+            {
+                throw new BusinessException("Token Is Not Belong To User.");
+            }
+            #endregion
+
+            #region Is Token Valid?
+            if (!token.IsValid)
+            {
+                throw new BusinessException("Token Is Not Valid.");
+            }
+            #endregion
+
+            #region Is Token Expired?
+            if(token.ExpireDate < DateTime.Now)
+            {
+                throw new BusinessException("Token Expired.");
+            }
+            #endregion
+
+            #endregion
+
+            _logger.LogInformation($"Business Validation For Email Confirmation Succeeded. - LogTrackId : {request.LogTrackId}");
         }
+
+
 
         public Task ExecuteForgotPasswordRules()
         {

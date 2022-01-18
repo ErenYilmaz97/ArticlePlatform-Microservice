@@ -80,7 +80,7 @@ namespace Microservice.Identity.Infrastructure.Service
             HashHelper.CreatePasswordHash(request.Password,  out byte[] hashedPassword, out byte[] passwordSalt);
    
 
-            if (user.PasswordHash == hashedPassword)
+            if (user.PasswordHash != hashedPassword)
             {
                 AddFailedLoginHistoryToUser(user);
                 await _uow.CommitChangesAsync();
@@ -172,6 +172,8 @@ namespace Microservice.Identity.Infrastructure.Service
                 Succeed = false,
                 LoginType = LoginType.DefaultLogin
             };
+
+            user.LoginHistories.Add(loginHistory);
         }
         #endregion
 

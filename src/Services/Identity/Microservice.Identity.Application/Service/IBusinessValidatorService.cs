@@ -1,4 +1,5 @@
 ﻿using Microservice.Identity.Domain.Model.Identity;
+using Microservice.Identity.Domain.Model.User;
 using Microservices.Core.Utilities.Result.Business;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Microservice.Identity.Application.Service
     {
         #region Proje içerisinde yürütülecek olan business kuralları
         public Task ExecuteRegisterRules(RegisterRequest request);
-        public Task ExecuteConfirmEmailRules();
+        public Task ExecuteConfirmEmailRules(ConfirmEmailRequest request);
         public Task ExecuteForgotPasswordRules();
         public Task ExecuteResetPasswordRules();
         public Task ExecuteLoginUserRules(UserLoginRequest request);

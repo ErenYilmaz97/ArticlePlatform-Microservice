@@ -104,6 +104,7 @@ var app = builder.Build();
 var redisCache = app.Services.GetRequiredService<ICache>();
 
 //TODO : CHECK ENTITY CONFIGS FOR GLOBALFILTER
+//TODO : ADD LOGTRACKID INTO ALL RESPONSES
 
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionHandlerMiddleware>();
