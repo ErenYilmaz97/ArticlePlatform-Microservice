@@ -3,6 +3,7 @@ using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Enum;
 using Microservice.Identity.Domain.Model.User;
+using Microservice.Identity.Infrastructure.Helper;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessResult> ConfirmEmail(ConfirmEmailRequest request)
         {
-            _logger.LogInformation($"Email Confirmation Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation($"Account Confirmation Flow Started. - LogTrackId : {request.LogTrackId}");
             await _businessValidatorService.ExecuteConfirmEmailRules(request);
 
             var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include : x => x.Include(x => x.CommonTokens), disableTracking : false);
@@ -47,12 +48,36 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessResult> ForgotPassword(ForgotPasswordRequest request)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Forgot Password Flow Started. - LogTrackId : {request.LogTrackId}");
+            await _businessValidatorService.ExecuteForgotPasswordRules(request);
+
+            var user = await _uow.Users.GetAsync(filter: x => x.Email == request.Email, include: x => x.Include(x => x.CommonTokens), disableTracking: false);
+            CreateResetPasswordTokenForUser(user);
+            await _uow.CommitChangesAsync();
+
+            SendResetPasswordEmailToUser(user);
+            _logger.LogInformation($"Forgot Password Flow Completed. - LogTrackId : {request.LogTrackId}");
+
+            return new SuccessBusinessResult("Forgot Password Flow Completed.");
         }
+
+
 
         public async Task<IBusinessResult> ResetPassword(ResetPasswordRequest request)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Reset Password Flow Started. - LogTrackId : {request.LogTrackId}");
+            await _businessValidatorService.ExecuteResetPasswordRules(request);
+
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include : x => x.Include(x => x.CommonTokens), disableTracking : false);
+
+            ChangeUserPassword(user, request.NewPassword);
+            RemoveResetPasswordTokenFromUser(user, request.ResetPasswordToken);
+            await _uow.CommitChangesAsync();
+
+            _logger.LogInformation($"Reset Password Flow Completed. - LogTrackId : {request.LogTrackId}");
+
+            return new SuccessBusinessResult("Reset Password Flow Completed.");
+
         }
 
 
@@ -69,6 +94,43 @@ namespace Microservice.Identity.Infrastructure.Service
         {
             var emailConfirmationToken = user.CommonTokens.First(x => x.Value == tokenValue && x.TokenType == TokenType.ConfirmEmailToken);
             user.CommonTokens.Remove(emailConfirmationToken);
+        }
+
+
+        private void CreateResetPasswordTokenForUser(User user)
+        {
+            var token = new UserCommonToken() 
+            {
+                TokenType = TokenType.ResetPasswordToken, 
+                Value = Guid.NewGuid().ToString(),
+                ExpireDate = DateTime.Now.AddDays(3),
+                IsValid = true
+            };
+
+            user.CommonTokens.Add(token);
+        }
+
+        private void SendResetPasswordEmailToUser(User user)
+        {
+            //Send Email via EmailService
+        }
+
+
+        private void ChangeUserPassword(User user, string newPassword)
+        {
+            byte[] passwordHash, passwordSalt;
+            HashHelper.CreatePasswordHash(newPassword, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.LastPasswordUpdatedDate = DateTime.Now;
+        }
+
+        
+        private void RemoveResetPasswordTokenFromUser(User user, string resetPasswordToken)
+        {
+            var token = user.CommonTokens.First(x => x.Value == resetPasswordToken);
+            user.CommonTokens.Remove(token);
         }
         #endregion
     }

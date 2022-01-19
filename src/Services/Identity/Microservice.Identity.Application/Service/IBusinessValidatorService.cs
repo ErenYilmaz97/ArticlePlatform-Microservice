@@ -14,8 +14,8 @@ namespace Microservice.Identity.Application.Service
         #region Proje içerisinde yürütülecek olan business kuralları
         public Task ExecuteRegisterRules(RegisterRequest request);
         public Task ExecuteConfirmEmailRules(ConfirmEmailRequest request);
-        public Task ExecuteForgotPasswordRules();
-        public Task ExecuteResetPasswordRules();
+        public Task ExecuteForgotPasswordRules(ForgotPasswordRequest request);
+        public Task ExecuteResetPasswordRules(ResetPasswordRequest request);
         public Task ExecuteLoginUserRules(UserLoginRequest request);
         public Task ExecuteLoginWithRefreshTokenRules();
         public Task ExecuteLoginClientRules(ClientLoginRequest request);
