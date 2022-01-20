@@ -12,11 +12,13 @@ namespace Microservice.Identity.Domain.Exception
     {
         public ValidationError ValidationError { get; set; }
         public string Message { get; set; }
+        public string LogTrackId { get; set; }
 
-        public ValidationException(string message,ValidationError validationError)
+        public ValidationException(string message,ValidationError validationError, string logTrackId)
         {
             this.Message = message;
             this.ValidationError = validationError;
+            this.LogTrackId = logTrackId;
         }
 
 

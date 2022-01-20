@@ -77,7 +77,7 @@ namespace Mircoservice.Identity.API.Controllers
         [Route("ErrorResponseTest")]
         public IActionResult ErrorResponseTest()
         {
-            throw new BusinessException("Test Exception");
+            throw new BusinessException("Test Exception", string.Empty);
         }
 
 

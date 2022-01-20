@@ -9,9 +9,10 @@ namespace Microservice.Identity.Domain.Exception
 {
     public class BusinessException : System.Exception
     {
-        public BusinessException(string message):base(message)
+        public string LogTrackId { get; set; }
+        public BusinessException(string message, string logTrackId):base(message)
         {
-
+            this.LogTrackId = logTrackId;
         }
 
 

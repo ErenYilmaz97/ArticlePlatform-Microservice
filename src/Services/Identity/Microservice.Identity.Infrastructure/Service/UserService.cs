@@ -40,7 +40,7 @@ namespace Microservice.Identity.Infrastructure.Service
             await _uow.CommitChangesAsync();
 
             _logger.LogInformation($"Account Confirmed Successfully. - LogTrackId : {request.LogTrackId}");
-            return new SuccessBusinessResult("Account Confirmed Successfully.");
+            return new SuccessBusinessResult("Account Confirmed Successfully.", request.LogTrackId);
 
         }
 
@@ -58,7 +58,7 @@ namespace Microservice.Identity.Infrastructure.Service
             SendResetPasswordEmailToUser(user);
             _logger.LogInformation($"Forgot Password Flow Completed. - LogTrackId : {request.LogTrackId}");
 
-            return new SuccessBusinessResult("Forgot Password Flow Completed.");
+            return new SuccessBusinessResult("Forgot Password Flow Completed.", request.LogTrackId);
         }
 
 
@@ -76,7 +76,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             _logger.LogInformation($"Reset Password Flow Completed. - LogTrackId : {request.LogTrackId}");
 
-            return new SuccessBusinessResult("Reset Password Flow Completed.");
+            return new SuccessBusinessResult("Reset Password Flow Completed.", request.LogTrackId);
 
         }
 

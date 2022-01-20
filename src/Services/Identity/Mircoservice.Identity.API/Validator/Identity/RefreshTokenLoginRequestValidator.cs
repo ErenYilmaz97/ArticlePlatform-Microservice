@@ -8,6 +8,7 @@ namespace Mircoservice.Identity.API.Validator.Identity
     {
         public RefreshTokenLoginRequestValidator()
         {
+            RuleFor(x => x.UserId).Must(base.NotNullOrEmpty).WithMessage("User ID field can't be null or empty.");
             RuleFor(x => x.RefreshToken).Must(base.NotNullOrEmpty).WithMessage("Refresh Token field can't be null or empty.");
         }
     }

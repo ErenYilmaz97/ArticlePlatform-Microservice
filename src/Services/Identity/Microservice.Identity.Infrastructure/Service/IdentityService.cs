@@ -47,7 +47,7 @@ namespace Microservice.Identity.Infrastructure.Service
             await SendAccountConfirmEmail(newUser);
             _logger.LogInformation($"User Successfully Registered.  - LogTrackId : {request.LogTrackId}");
 
-            return new SuccessBusinessResult("User Registered Successfully.");
+            return new SuccessBusinessResult("User Registered Successfully.", request.LogTrackId);
         }
 
 
@@ -64,7 +64,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             _logger.LogInformation($"Client Successfully Logged in.  - LogTrackId : {request.LogTrackId}");
 
-            return new SuccessBusinessDataResult<ClientToken>("Client Successfully Logged in.", clientToken);
+            return new SuccessBusinessDataResult<ClientToken>("Client Successfully Logged in.", clientToken, request.LogTrackId);
         }
 
 
@@ -86,29 +86,37 @@ namespace Microservice.Identity.Infrastructure.Service
                 await _uow.CommitChangesAsync();
 
                 _logger.LogInformation($"User Password Does Not Match. - LogTrackId : {request.LogTrackId}");
-                return new FailBusinessDataResult<UserToken>("User Password Does Not Match.");
+                return new FailBusinessDataResult<UserToken>("User Password Does Not Match.", request.LogTrackId);
             }
 
-            AddSuccessLoginHistoryToUser(user);
+            AddSuccessLoginHistoryToUser(user, LoginType.DefaultLogin);
             await _uow.CommitChangesAsync();
 
             var userToken = JwtHelper.CreateUserAccessToken(user, _tokenOptions);
             _logger.LogInformation($"User Successfully Logged in. - LogTrackId : {request.LogTrackId}");
 
-            return new SuccessBusinessDataResult<UserToken>(userToken);
+            return new SuccessBusinessDataResult<UserToken>(userToken, request.LogTrackId);
         }
 
 
 
-        public Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request)
+        public async Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Refresh Token Login Flow Started. - LogTrackId : {request.LogTrackId}");
+            await _businessValidatorService.ExecuteLoginWithRefreshTokenRules(request);
+
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include: x => x.Include(x => x.CommonTokens), disableTracking: false);
+            AddSuccessLoginHistoryToUser(user, LoginType.RefreshTokenLogin);
+            await _uow.CommitChangesAsync();
+
+            var token = JwtHelper.CreateUserAccessToken(user, _tokenOptions);
+            _logger.LogInformation($"Refresh Token Login Flow Completed Successfully. - LogTrackId : {request.LogTrackId}");
+
+            return new SuccessBusinessDataResult<UserToken>(token, request.LogTrackId);
         }
 
 
-        #region Private Helper Methods
-
-        #region Register Methots
+        #region Private Helper Methods      
         private User CreateUser(RegisterRequest request)
         {
             HashHelper.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -146,23 +154,19 @@ namespace Microservice.Identity.Infrastructure.Service
         {
             //Send Email via EmailService
         }
-
-        #endregion
-
-
-        #region User Login Methots
-        private void AddSuccessLoginHistoryToUser(User user)
+       
+    
+        private void AddSuccessLoginHistoryToUser(User user, LoginType loginType)
         {
             var loginHistory = new LoginHistory()
             {
                 Succeed = true,
-                LoginType = LoginType.DefaultLogin
+                LoginType = loginType
             };
 
             user.LoginHistories.Add(loginHistory);
             user.LastLoginDate = DateTime.Now;
         }
-
 
 
         private void AddFailedLoginHistoryToUser(User user)
@@ -175,8 +179,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             user.LoginHistories.Add(loginHistory);
         }
-        #endregion
-
+          
         #endregion
 
     }

@@ -10,15 +10,17 @@ namespace Microservices.Core.Utilities.Result.Business
     {
         public ResultCodes ResultCode { get; set; }
         public string ResultMessage { get; set; }
+        public string LogTrackId { get; set; }
 
 
-        public FailBusinessResult()
+        public FailBusinessResult(string logTrackId)
         {
             this.ResultCode = ResultCodes.Failed;
+            this.LogTrackId = logTrackId;
         }
 
 
-        public FailBusinessResult(string message) : this()
+        public FailBusinessResult(string message, string logTrackId) : this(logTrackId)
         {
             this.ResultMessage = message;
         }

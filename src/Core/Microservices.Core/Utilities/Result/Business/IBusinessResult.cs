@@ -10,5 +10,6 @@ namespace Microservices.Core.Utilities.Result.Business
     {
          ResultCodes ResultCode { get; set; }
          string ResultMessage { get; set; }
+         string LogTrackId { get; set; }
     }
 }

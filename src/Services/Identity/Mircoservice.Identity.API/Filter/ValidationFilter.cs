@@ -27,7 +27,8 @@ namespace Mircoservice.Identity.API.Filter
                 ValidationError validationError = new ValidationError(validationErrorDetails);
 
                 //Will Handle In ExceptionHandler Middleware
-                throw new Microservice.Identity.Domain.Exception.ValidationException("Validation Error" ,validationError);
+                string logTrackId = context.HttpContext.Request.Headers["logTrackId"];
+                throw new Microservice.Identity.Domain.Exception.ValidationException("Validation Error" ,validationError, logTrackId);
             }
         }
 

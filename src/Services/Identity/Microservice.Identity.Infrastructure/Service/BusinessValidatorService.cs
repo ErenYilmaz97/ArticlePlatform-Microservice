@@ -1,10 +1,12 @@
 ﻿using Microservice.Identity.Application.Service;
 using Microservice.Identity.Application.UnitOfWork;
+using Microservice.Identity.Domain.Enum;
 using Microservice.Identity.Domain.Exception;
 using Microservice.Identity.Domain.Model.Identity;
 using Microservice.Identity.Domain.Model.User;
 using Microservice.Identity.Infrastructure.Helper;
 using Microservices.Core.Utilities.Result.Business;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             if(user is null)
             {
-                throw new BusinessException("There is a user that using same email.");
+                throw new BusinessException("There is a user that using same email.", request.LogTrackId);
             }
             #endregion
 
@@ -56,7 +58,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             if(client is null)
             {
-                throw new BusinessException("Client not found.");
+                throw new BusinessException("Client not found.", request.LogTrackId);
             }
             #endregion
 
@@ -65,7 +67,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             if (!isPasswordValid)
             {
-                throw new BusinessException("Client Secret does not Match.");
+                throw new BusinessException("Client Secret does not Match.", request.LogTrackId);
             }
             #endregion
 
@@ -86,14 +88,14 @@ namespace Microservice.Identity.Infrastructure.Service
 
             if(user is null)
             {
-                throw new BusinessException("User Not Found By Email.");
+                throw new BusinessException("User Not Found By Email.", request.LogTrackId);
             }
             #endregion
 
             #region Is User Confirmed His Account?
             if(!user.EmailConfirmed)
             {
-                throw new BusinessException("Account Not Confirmed.");
+                throw new BusinessException("Account Not Confirmed.", request.LogTrackId);
             }
             #endregion
 
@@ -109,33 +111,35 @@ namespace Microservice.Identity.Infrastructure.Service
         {
             #region Checking Business Rules
 
-            #region Is Token Exist ?
-            var token = await _uow.UserCommonTokens.GetAsync(filter: x => x.Value == request.ConfirmEmailToken);
+            #region Does User Exist ?
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include: x => x.Include(x => x.CommonTokens));
 
-            if(token is null)
+            if (user is null)
             {
-                throw new BusinessException("Email Confirmation Token Not Found.");
+                throw new BusinessException("User Not Found.", request.LogTrackId);
+            }
+            #endregion          
+
+            #region Does Token Exist And Belong To User ?
+            var token = user.CommonTokens.FirstOrDefault(x => x.Value == request.ConfirmEmailToken && x.TokenType == TokenType.ConfirmEmailToken);
+
+            if (token is null)
+            {
+                throw new BusinessException("Email Confirmation Token Not Found.", request.LogTrackId);
             }
             #endregion 
-
-            #region Is Token Belong To The User?
-            if(token.UserId != request.UserId)
-            {
-                throw new BusinessException("Token Is Not Belong To User.");
-            }
-            #endregion
 
             #region Is Token Valid?
             if (!token.IsValid)
             {
-                throw new BusinessException("Token Is Not Valid.");
+                throw new BusinessException("Token Is Not Valid.", request.LogTrackId);
             }
             #endregion
 
             #region Is Token Expired?
             if(token.ExpireDate > DateTime.Now)
             {
-                throw new BusinessException("Token Expired.");
+                throw new BusinessException("Token Expired.", request.LogTrackId);
             }
             #endregion
 
@@ -156,14 +160,14 @@ namespace Microservice.Identity.Infrastructure.Service
 
             if(user is null)
             {
-                throw new BusinessException("User Not Found.");
+                throw new BusinessException("User Not Found.", request.LogTrackId);
             }
             #endregion
 
             #region Is User's Account Confirmed ?
             if (!user.EmailConfirmed)
             {
-                throw new BusinessException("Account Not Confirmed.");
+                throw new BusinessException("Account Not Confirmed.", request.LogTrackId);
             }
             #endregion
 
@@ -181,33 +185,35 @@ namespace Microservice.Identity.Infrastructure.Service
         {
             #region Checking Business Rules
 
-            #region Does Token Exist?
-            var token = await _uow.UserCommonTokens.GetAsync(filter: x => x.Value == request.ResetPasswordToken);
+            #region Does User Exist?
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include: x => x.Include(x => x.CommonTokens));
 
-            if(token is null)
+            if (user is null)
             {
-                throw new BusinessException("Reset Password Token Not Found.");
+                throw new BusinessException("User Not Found.", request.LogTrackId);
             }
             #endregion
 
-            #region Does Token Belong To User ?
-            if(token.UserId != request.UserId)
+            #region Does Token Exist And Belong To User ?
+            var token = user.CommonTokens.FirstOrDefault(x => x.Value == request.ResetPasswordToken && x.TokenType == TokenType.ResetPasswordToken);
+
+            if (token is null)
             {
-                throw new BusinessException("Token Does Not Belong To User.");
+                throw new BusinessException("Reset Password token Not Found.", request.LogTrackId);
             }
             #endregion
 
             #region Does Token Valid ?
             if (!token.IsValid)
             {
-                throw new BusinessException("Token Is Not Valid.");
+                throw new BusinessException("Token Is Not Valid.", request.LogTrackId);
             }
             #endregion
 
             #region Does Token Expired ?
             if(token.ExpireDate > DateTime.Now)
             {
-                throw new BusinessException("Token Expired.");
+                throw new BusinessException("Token Expired.", request.LogTrackId);
             }
             #endregion
 
@@ -218,12 +224,48 @@ namespace Microservice.Identity.Infrastructure.Service
 
 
 
-        public Task ExecuteLoginWithRefreshTokenRules()
+        public async Task ExecuteLoginWithRefreshTokenRules(RefreshTokenLoginRequest request)
         {
-            throw new NotImplementedException();
+            #region Checking Business Rules
+
+            #region Does User Exist ?
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include : x => x.Include(x => x.CommonTokens));
+
+            if(user is null)
+            {
+                throw new BusinessException("User Not Found.", request.LogTrackId);
+            }
+            #endregion
+
+            #region Does Token Exist And Belong To User ?
+            var token = user.CommonTokens.FirstOrDefault(x => x.Value == request.RefreshToken && x.TokenType == TokenType.RefreshToken);
+
+            if (token is null)
+            {
+                throw new BusinessException("User's Refresh Token Not Found.", request.LogTrackId);
+            }
+            #endregion
+
+            #region Does Token Valid ?
+            if (!token.IsValid)
+            {
+                throw new BusinessException(" Refresh Token Not Valid.", request.LogTrackId);
+            }
+            #endregion
+
+            #region Does Token Expired ?
+            if(token.ExpireDate > DateTime.Now)
+            {
+                throw new BusinessException("Refresh Token Expired.", request.LogTrackId);
+            }
+            #endregion
+
+            #endregion
+
+            _logger.LogInformation($"Business Validation For Refresh Token Login Succeeded. - LogTrackId : {request.LogTrackId}");
         }
 
-       
-        
+
+
     }
 }

@@ -17,7 +17,7 @@ namespace Microservice.Identity.Application.Service
         public Task ExecuteForgotPasswordRules(ForgotPasswordRequest request);
         public Task ExecuteResetPasswordRules(ResetPasswordRequest request);
         public Task ExecuteLoginUserRules(UserLoginRequest request);
-        public Task ExecuteLoginWithRefreshTokenRules();
+        public Task ExecuteLoginWithRefreshTokenRules(RefreshTokenLoginRequest request);
         public Task ExecuteLoginClientRules(ClientLoginRequest request);
         #endregion
     }
