@@ -12,6 +12,7 @@ namespace Microservice.Identity.Domain.Entity
         public string Name { get; set; }
         public string Description { get; set; }
         public long PermissionGroupId { get; set; }
+        public bool IsDefault { get; set; }
 
 
         #region Nav Props

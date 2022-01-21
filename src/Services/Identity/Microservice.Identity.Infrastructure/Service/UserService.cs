@@ -4,6 +4,7 @@ using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Enum;
 using Microservice.Identity.Domain.Model.User;
 using Microservice.Identity.Infrastructure.Helper;
+using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessResult> ConfirmEmail(ConfirmEmailRequest request)
         {
-            _logger.LogInformation($"Account Confirmation Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Account Confirmation Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteConfirmEmailRules(request);
 
             var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include : x => x.Include(x => x.CommonTokens), disableTracking : false);
@@ -39,7 +40,7 @@ namespace Microservice.Identity.Infrastructure.Service
             RemoveEmailConfirmationTokenFromUser(user, request.ConfirmEmailToken);
             await _uow.CommitChangesAsync();
 
-            _logger.LogInformation($"Account Confirmed Successfully. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Account Confirmed Successfully.", request.LogTrackId));
             return new SuccessBusinessResult("Account Confirmed Successfully.", request.LogTrackId);
 
         }
@@ -48,7 +49,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessResult> ForgotPassword(ForgotPasswordRequest request)
         {
-            _logger.LogInformation($"Forgot Password Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Forgot Password Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteForgotPasswordRules(request);
 
             var user = await _uow.Users.GetAsync(filter: x => x.Email == request.Email, include: x => x.Include(x => x.CommonTokens), disableTracking: false);
@@ -56,7 +57,7 @@ namespace Microservice.Identity.Infrastructure.Service
             await _uow.CommitChangesAsync();
 
             SendResetPasswordEmailToUser(user);
-            _logger.LogInformation($"Forgot Password Flow Completed. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Forgot Password Flow Completed Successfully.", request.LogTrackId));
 
             return new SuccessBusinessResult("Forgot Password Flow Completed.", request.LogTrackId);
         }
@@ -65,7 +66,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessResult> ResetPassword(ResetPasswordRequest request)
         {
-            _logger.LogInformation($"Reset Password Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Reset Password Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteResetPasswordRules(request);
 
             var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include : x => x.Include(x => x.CommonTokens), disableTracking : false);
@@ -74,7 +75,7 @@ namespace Microservice.Identity.Infrastructure.Service
             RemoveResetPasswordTokenFromUser(user, request.ResetPasswordToken);
             await _uow.CommitChangesAsync();
 
-            _logger.LogInformation($"Reset Password Flow Completed. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Reset Password Flow Completed Successfully.", request.LogTrackId));
 
             return new SuccessBusinessResult("Reset Password Flow Completed.", request.LogTrackId);
 

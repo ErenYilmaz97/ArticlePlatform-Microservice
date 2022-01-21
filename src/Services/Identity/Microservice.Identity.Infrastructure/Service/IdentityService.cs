@@ -5,6 +5,7 @@ using Microservice.Identity.Domain.Enum;
 using Microservice.Identity.Domain.Model;
 using Microservice.Identity.Domain.Model.Identity;
 using Microservice.Identity.Infrastructure.Helper;
+using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,30 +23,40 @@ namespace Microservice.Identity.Infrastructure.Service
         private readonly IBusinessValidatorService _businessValidatorService;
         private readonly ILogger<IdentityService> _logger;
         private readonly IIdentityUnitOfWork _uow;
+        private readonly IRoleService _roleService;
         private readonly TokenOptions _tokenOptions;
 
-        public IdentityService(IBusinessValidatorService businessValidatorService, ILogger<IdentityService> logger, IIdentityUnitOfWork uow, IOptions<TokenOptions> tokenOptions)
+        public IdentityService(IBusinessValidatorService businessValidatorService, 
+                               ILogger<IdentityService> logger, 
+                               IIdentityUnitOfWork uow,
+                               IRoleService roleService,
+                               IOptions<TokenOptions> tokenOptions)
         {
             _businessValidatorService = businessValidatorService;
             _logger = logger;
             _uow = uow;
             _tokenOptions = tokenOptions.Value;
+            _roleService = roleService;
         }
 
 
         public async Task<IBusinessResult> Register(RegisterRequest request)
         {
-            _logger.LogInformation($"User Register Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("User Register Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteRegisterRules(request);
 
             var newUser = CreateUser(request);
             CreateEmailConfirmationToken(newUser);
 
+
+            var defaultRole = await _roleService.GetDefaultUserRole();
+            newUser.Roles.Add(defaultRole.Data);
+
             _uow.Users.InsertAsync(newUser);
             _uow.CommitChangesAsync();
 
             await SendAccountConfirmEmail(newUser);
-            _logger.LogInformation($"User Successfully Registered.  - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("User Registered Successfully.", request.LogTrackId));
 
             return new SuccessBusinessResult("User Registered Successfully.", request.LogTrackId);
         }
@@ -54,7 +65,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessDataResult<ClientToken>> LoginClient(ClientLoginRequest request)
         {
-            _logger.LogInformation($"Client Login Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Client Login Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteLoginClientRules(request);
 
             HashHelper.CreatePasswordHash(request.ClientSecret, out byte[] passwordHash, out byte[] hashedClientSecret);
@@ -62,7 +73,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
             var clientToken = JwtHelper.CreateClientAccessToken(client, _tokenOptions);
 
-            _logger.LogInformation($"Client Successfully Logged in.  - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Client Successfully Logged in.", request.LogTrackId));
 
             return new SuccessBusinessDataResult<ClientToken>("Client Successfully Logged in.", clientToken, request.LogTrackId);
         }
@@ -72,11 +83,11 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessDataResult<UserToken>> LoginUser(UserLoginRequest request)
         {
-            _logger.LogInformation($"User Login Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("User Login Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteLoginUserRules(request);
 
 
-            var user = await _uow.Users.GetAsync(filter: x => x.Email == request.Email, include: x => x.Include(x => x.LoginHistories), disableTracking: false);
+            var user = await _uow.Users.GetAsync(filter: x => x.Email == request.Email, include: x => x.Include(x => x.LoginHistories).Include(x => x.CommonTokens), disableTracking: false);
             HashHelper.CreatePasswordHash(request.Password,  out byte[] hashedPassword, out byte[] passwordSalt);
    
 
@@ -85,15 +96,16 @@ namespace Microservice.Identity.Infrastructure.Service
                 AddFailedLoginHistoryToUser(user);
                 await _uow.CommitChangesAsync();
 
-                _logger.LogInformation($"User Password Does Not Match. - LogTrackId : {request.LogTrackId}");
+                _logger.LogInformation("{@logObject}", new LogObject("User Password Does Not Match.", request.LogTrackId));
                 return new FailBusinessDataResult<UserToken>("User Password Does Not Match.", request.LogTrackId);
             }
 
             AddSuccessLoginHistoryToUser(user, LoginType.DefaultLogin);
+            RenewRefreshToken(user);
             await _uow.CommitChangesAsync();
 
             var userToken = JwtHelper.CreateUserAccessToken(user, _tokenOptions);
-            _logger.LogInformation($"User Successfully Logged in. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("User Successfully Logged in.", request.LogTrackId));
 
             return new SuccessBusinessDataResult<UserToken>(userToken, request.LogTrackId);
         }
@@ -102,7 +114,7 @@ namespace Microservice.Identity.Infrastructure.Service
 
         public async Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request)
         {
-            _logger.LogInformation($"Refresh Token Login Flow Started. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Refresh Token Login Flow Started.", request.LogTrackId));
             await _businessValidatorService.ExecuteLoginWithRefreshTokenRules(request);
 
             var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId, include: x => x.Include(x => x.CommonTokens), disableTracking: false);
@@ -110,7 +122,7 @@ namespace Microservice.Identity.Infrastructure.Service
             await _uow.CommitChangesAsync();
 
             var token = JwtHelper.CreateUserAccessToken(user, _tokenOptions);
-            _logger.LogInformation($"Refresh Token Login Flow Completed Successfully. - LogTrackId : {request.LogTrackId}");
+            _logger.LogInformation("{@logObject}", new LogObject("Refresh Token Login Flow Completed Successfully.", request.LogTrackId));
 
             return new SuccessBusinessDataResult<UserToken>(token, request.LogTrackId);
         }
@@ -179,6 +191,29 @@ namespace Microservice.Identity.Infrastructure.Service
 
             user.LoginHistories.Add(loginHistory);
         }
+
+
+        private void RenewRefreshToken(User user)
+        {
+            var refreshToken = user.CommonTokens.FirstOrDefault(x => x.TokenType == TokenType.RefreshToken);
+
+            if(refreshToken is not null)
+            {
+                user.CommonTokens.Remove(refreshToken);
+            }
+            
+            //Yeni Refresh Token Oluştur
+            var token = new UserCommonToken()
+            {
+                TokenType= TokenType.RefreshToken,
+                Value = Guid.NewGuid().ToString(),
+                ExpireDate = DateTime.Now.AddDays(30),
+                IsValid = true
+            };
+
+            user.CommonTokens.Add(token);
+        }
+      
           
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using Microservice.Identity.Domain.Exception;
 using Microservice.Identity.Domain.Extension;
+using Microservices.Core.CrossCuttingConcerns.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -42,21 +43,17 @@ namespace Microservice.Identity.Domain.CustomMiddleware
         {          
             if (ex is ValidationException validationException)
             {
-                var validationErrorLog = new { logTrackId = logTrackId, exceptionMessage = validationException.ValidationError.ToString() };
-                this._logger.LogError("Validation Error Occurred. {@errorLogObject}", validationErrorLog);
+                this._logger.LogError("Validation Error Occurred. {@errorLogObject}", new LogObject(validationException.ValidationError.ToString(), logTrackId));
                 return context.Response.ReturnValidationErrorResponse(validationException);
             }
 
             if(ex is BusinessException businessException)
             {
-                var businessErrorLog = new { logTrackId = logTrackId, exceptionMessage = businessException.Message};
-                this._logger.LogError("Business Error Occurred. {@errorLogObject}", businessErrorLog);
+                this._logger.LogError("Business Error Occurred. {@errorLogObject}", new LogObject(businessException.Message, logTrackId));
                 return context.Response.ReturnBusinessErrorResponse(businessException);
             }
 
-
-            var errorLogObject = new { logTrackId = logTrackId, exceptionMessage = ex.Message };
-            this._logger.LogError("Unexpected Error Occurred. {@errorLogObject}", errorLogObject);
+            this._logger.LogError("Unexpected Error Occurred. {@errorLogObject}", new LogObject(ex.Message, logTrackId));
             return context.Response.InternalServerErrorResponse(ex);
         }
     }

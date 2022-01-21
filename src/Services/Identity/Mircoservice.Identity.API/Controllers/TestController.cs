@@ -88,15 +88,5 @@ namespace Mircoservice.Identity.API.Controllers
             throw new ApplicationException("Internal Error Test");
         }
 
-
-        [HttpGet]
-        [Route("JwtHelperTest")]
-        public IActionResult JwtHelperTest()
-        {
-            
-            var token = JwtHelper.CreateUserAccessToken(new User(), _tokenOptions);
-            var token2 = JwtHelper.CreateClientAccessToken(new SubscribedClient(), _tokenOptions);
-            return Ok();
-        }
     }
 }

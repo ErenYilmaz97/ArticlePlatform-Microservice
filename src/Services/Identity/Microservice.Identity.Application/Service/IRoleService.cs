@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microservice.Identity.Domain.Entity;
+using Microservices.Core.Utilities.Result.Business;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,6 @@ namespace Microservice.Identity.Application.Service
 {
     public interface IRoleService
     {
+        Task<IBusinessDataResult<Role>> GetDefaultUserRole();
     }
 }
