@@ -2,9 +2,11 @@
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Enum;
+using Microservice.Identity.Domain.Exception;
 using Microservice.Identity.Domain.Model.User;
 using Microservice.Identity.Infrastructure.Helper;
 using Microservices.Core.CrossCuttingConcerns.Logging;
+using Microservices.Core.Utilities.Result;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,12 +23,14 @@ namespace Microservice.Identity.Infrastructure.Service
         private readonly IBusinessValidatorService _businessValidatorService;
         private readonly ILogger<UserService> _logger;
         private readonly IIdentityUnitOfWork _uow;
+        private readonly IEmailService _emailService;
 
-        public UserService(IBusinessValidatorService businessValidatorService, ILogger<UserService> logger, IIdentityUnitOfWork uow)
+        public UserService(IBusinessValidatorService businessValidatorService, ILogger<UserService> logger, IIdentityUnitOfWork uow, IEmailService emailService)
         {
             _businessValidatorService = businessValidatorService;
             _logger = logger;
             _uow = uow;
+            _emailService = emailService;
         }
 
 
@@ -56,7 +60,7 @@ namespace Microservice.Identity.Infrastructure.Service
             CreateResetPasswordTokenForUser(user);
             await _uow.CommitChangesAsync();
 
-            SendResetPasswordEmailToUser(user);
+            await SendResetPasswordEmailToUser(user);
             _logger.LogInformation("{@logObject}", new LogObject("Forgot Password Flow Completed Successfully.", request.LogTrackId));
 
             return new SuccessBusinessResult("Forgot Password Flow Completed.", request.LogTrackId);
@@ -111,9 +115,15 @@ namespace Microservice.Identity.Infrastructure.Service
             user.CommonTokens.Add(token);
         }
 
-        private void SendResetPasswordEmailToUser(User user)
+        private async Task SendResetPasswordEmailToUser(User user)
         {
             //Send Email via EmailService
+            var sendEmailResult = await _emailService.SendConfirmAccountEMail(new Domain.Model.Email.SendConfirmAccountRequest() { Email = user.Email });
+
+            if (sendEmailResult.ResultCode != ResultCodes.Success)
+            {
+                throw new BusinessException("Failed To Send Reset Password Email.", string.Empty);
+            }
         }
 
 

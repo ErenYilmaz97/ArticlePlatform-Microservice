@@ -41,7 +41,6 @@ namespace Microservice.Identity.Domain.Context
             builder.ApplyConfiguration(new UserCommonTokenEntityConfiguration());
             builder.ApplyConfiguration(new SubscribedClientEntityConfiguration());
 
-
             base.OnModelCreating(builder);
         }
 

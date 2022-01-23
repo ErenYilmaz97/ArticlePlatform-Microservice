@@ -1,4 +1,5 @@
 ﻿using Microservice.Identity.Domain.Entity;
+using Microservices.Core.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -24,6 +25,9 @@ namespace Microservice.Identity.Domain.EntityConfigurations
             builder.Property(x => x.Description).IsRequired().HasMaxLength(100);
 
             builder.HasMany(x => x.PermissionGroups).WithMany(x => x.Permissions);
+
+            builder.HasData(new Permission() { PermissionType = PermissionType.Default, Description = "Default Permission" });
+
         }
     }
 }

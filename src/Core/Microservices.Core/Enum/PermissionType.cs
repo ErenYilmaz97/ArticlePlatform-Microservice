@@ -8,5 +8,6 @@ namespace Microservices.Core.Enum
 {
     public enum PermissionType
     {
+        Default = 1
     }
 }

@@ -2,10 +2,12 @@
 using Microservice.Identity.Application.UnitOfWork;
 using Microservice.Identity.Domain.Entity;
 using Microservice.Identity.Domain.Enum;
+using Microservice.Identity.Domain.Exception;
 using Microservice.Identity.Domain.Model;
 using Microservice.Identity.Domain.Model.Identity;
 using Microservice.Identity.Infrastructure.Helper;
 using Microservices.Core.CrossCuttingConcerns.Logging;
+using Microservices.Core.Utilities.Result;
 using Microservices.Core.Utilities.Result.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,18 +27,21 @@ namespace Microservice.Identity.Infrastructure.Service
         private readonly IIdentityUnitOfWork _uow;
         private readonly IRoleService _roleService;
         private readonly TokenOptions _tokenOptions;
+        private readonly IEmailService _emailService;
 
         public IdentityService(IBusinessValidatorService businessValidatorService, 
                                ILogger<IdentityService> logger, 
                                IIdentityUnitOfWork uow,
                                IRoleService roleService,
-                               IOptions<TokenOptions> tokenOptions)
+                               IOptions<TokenOptions> tokenOptions,
+                               IEmailService emailService)
         {
             _businessValidatorService = businessValidatorService;
             _logger = logger;
             _uow = uow;
             _tokenOptions = tokenOptions.Value;
             _roleService = roleService;
+            _emailService = emailService;
         }
 
 
@@ -165,6 +170,12 @@ namespace Microservice.Identity.Infrastructure.Service
         private async Task SendAccountConfirmEmail(User user)
         {
             //Send Email via EmailService
+            var sendEmailResult = await _emailService.SendConfirmAccountEMail(new Domain.Model.Email.SendConfirmAccountRequest() { Email = user.Email });
+
+            if(sendEmailResult.ResultCode != ResultCodes.Success)
+            {
+                throw new BusinessException("Failed To Send Confirm Account Email.", string.Empty);
+            }
         }
        
     

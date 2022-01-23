@@ -37,6 +37,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("RedisOptions"));
 builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("JwtOptions"));
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
+
 
 #region IoC Container
 builder.Services.AddDbContext<IdentityDbContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnectionString")), ServiceLifetime.Transient);
@@ -60,6 +62,7 @@ builder.Services.AddTransient<IUserCommonTokenService, UserCommonTokenService>()
 builder.Services.AddTransient<ISubscribedClientService, SubscribedClientService>();
 builder.Services.AddTransient<IBusinessValidatorService, BusinessValidatorService>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 #endregion
 
