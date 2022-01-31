@@ -15,6 +15,8 @@ namespace Microservice.Identity.Application.Service
         public Task<IBusinessDataResult<UserToken>> LoginUser(UserLoginRequest request);
         public Task<IBusinessDataResult<UserToken>> LoginWithRefreshToken(RefreshTokenLoginRequest request);
         public Task<IBusinessDataResult<ClientToken>> LoginClient(ClientLoginRequest request);
+        public Task<IBusinessResult> ValidateClient(ValidateClientRequest request);
+        public Task<IBusinessResult> ValidateUser(ValidateUserRequest request);
 
     }
 }

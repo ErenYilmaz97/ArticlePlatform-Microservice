@@ -85,7 +85,6 @@ namespace Microservice.Identity.Infrastructure.Service
 
 
 
-
         public async Task<IBusinessDataResult<UserToken>> LoginUser(UserLoginRequest request)
         {
             _logger.LogInformation("{@logObject}", new LogObject("User Login Flow Started.", request.LogTrackId));
@@ -131,6 +130,62 @@ namespace Microservice.Identity.Infrastructure.Service
 
             return new SuccessBusinessDataResult<UserToken>(token, request.LogTrackId);
         }
+
+
+
+        public async Task<IBusinessResult> ValidateClient(ValidateClientRequest request)
+        {
+            _logger.LogInformation("{@logObject}", new LogObject("Validate Client Flow Started.", request.LogTrackId));
+
+            var client = await _uow.SubscribedClients.GetAsync(filter: x => x.Id == request.ClientId);
+
+            if(client is null)
+            {
+                _logger.LogInformation("{@logObject}", new LogObject("Client Not Found.", request.LogTrackId));
+                return new FailBusinessResult("Client Not Found.", request.LogTrackId);
+            }
+
+            var clientSecretSalt = client.PasswordSalt;
+            HashHelper.CreatePasswordHash(request.ClientSecret, out byte[] passwordHash,  out clientSecretSalt);
+
+            bool isPasswordCorrect = HashHelper.VerifyPasswordHash(request.ClientSecret, client.PasswordHash, client.PasswordSalt);
+
+            if (!isPasswordCorrect)
+            {
+                _logger.LogInformation("{@logObject}", new LogObject("Client Secret Not Correct.", request.LogTrackId));
+                return new FailBusinessResult("Client Secret Not Correct", request.LogTrackId);
+            }
+
+            return new SuccessBusinessResult("Client Validated.", request.LogTrackId);
+            
+        }
+
+
+
+        public async Task<IBusinessResult> ValidateUser(ValidateUserRequest request)
+        {
+            _logger.LogInformation("{@logObject}", new LogObject("Validate User Flow Started.", request.LogTrackId));
+
+            var user = await _uow.Users.GetAsync(filter: x => x.Id == request.UserId,
+                                                include: x => x.Include(x => x.Roles).ThenInclude(x => x.PermissionGroup).ThenInclude(x => x.Permissions));
+
+            if(user is null)
+            {
+                _logger.LogInformation("{@logObject}", new LogObject("User Not Found.", request.LogTrackId));
+                return new FailBusinessResult("User Not Found.", request.LogTrackId);
+            }
+
+            bool userHasPermission = user.Roles.Any(x => x.PermissionGroup.Permissions.Any(x => x.PermissionType == request.Permission));
+
+            if (!userHasPermission)
+            {
+                _logger.LogInformation("{@logObject}", new LogObject("User Doesn't Have Permission.", request.LogTrackId));
+                return new FailBusinessResult("User Doesn't Have Permission..", request.LogTrackId);
+            }
+
+            return new SuccessBusinessResult("User Validated.", request.LogTrackId);
+        }
+
 
 
         #region Private Helper Methods      

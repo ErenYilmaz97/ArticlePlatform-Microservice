@@ -135,5 +135,59 @@ namespace Mircoservice.Identity.API.Controllers
         #endregion
 
 
+
+
+        [HttpPost]
+        [Route("Validate/Client")]
+        #region Validate Client Endpoint
+        public async Task<IActionResult> ValidateClient(ValidateClientRequest request)
+        {
+            request.LogTrackId = base.GetLogTrackIdFromHeader();
+            var serviceResult = await _identityService.ValidateClient(request);
+
+            if(serviceResult.ResultCode == ResultCodes.Success)
+            {
+                return Ok(new ControllerResponse<Object>()
+                {
+                    ResultCode = serviceResult.ResultCode,
+                    ResultMessage = serviceResult.ResultMessage,
+                });
+            }
+            return BadRequest(new ControllerResponse<Object>()
+            {
+                ResultCode = serviceResult.ResultCode,
+                ResultMessage = serviceResult.ResultMessage
+            });
+
+        }
+        #endregion
+
+
+
+        [HttpPost]
+        [Route("Validate/User")]
+        #region Validate User Endpoint
+        public async Task<IActionResult> ValidateUser(ValidateUserRequest request)
+        {
+            request.LogTrackId = base.GetLogTrackIdFromHeader();
+            var serviceResult = await _identityService.ValidateUser(request);
+
+            if (serviceResult.ResultCode == ResultCodes.Success)
+            {
+                return Ok(new ControllerResponse<Object>()
+                {
+                    ResultCode = serviceResult.ResultCode,
+                    ResultMessage = serviceResult.ResultMessage,
+                });
+            }
+            return BadRequest(new ControllerResponse<Object>()
+            {
+                ResultCode = serviceResult.ResultCode,
+                ResultMessage = serviceResult.ResultMessage
+            });
+
+        }
+        #endregion
+
     }
 }
