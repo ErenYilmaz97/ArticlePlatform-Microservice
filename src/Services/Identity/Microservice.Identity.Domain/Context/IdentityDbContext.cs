@@ -18,6 +18,12 @@ namespace Microservice.Identity.Domain.Context
         }
 
 
+        public IdentityDbContext()
+        {
+
+        }
+
+
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -42,6 +48,15 @@ namespace Microservice.Identity.Domain.Context
             builder.ApplyConfiguration(new SubscribedClientEntityConfiguration());
 
             base.OnModelCreating(builder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(localdb)\\Eren;Database=IdentityService.Database;Trusted_Connection=True;MultipleActiveResultSets=True");
+            }
+           
         }
 
     }

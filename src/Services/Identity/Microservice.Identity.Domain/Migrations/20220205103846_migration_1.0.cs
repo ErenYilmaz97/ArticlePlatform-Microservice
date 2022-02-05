@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Microservice.Identity.Domain.Migrations
 {
-    public partial class v10 : Migration
+    public partial class migration_10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -93,13 +93,13 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.PermissionsId,
                         principalTable: "Permission",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PermissionPermissionGroup_PermissionGroups_PermissionGroupsId",
                         column: x => x.PermissionGroupsId,
                         principalTable: "PermissionGroups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,6 +110,7 @@ namespace Microservice.Identity.Domain.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PermissionGroupId = table.Column<long>(type: "bigint", nullable: false),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -121,7 +122,7 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.PermissionGroupId,
                         principalTable: "PermissionGroups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,7 +145,7 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,7 +167,7 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,7 +191,7 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -208,14 +209,19 @@ namespace Microservice.Identity.Domain.Migrations
                         column: x => x.RolesId,
                         principalTable: "Roles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RoleUser_Users_UsersId",
                         column: x => x.UsersId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Permission",
+                columns: new[] { "Id", "Created", "Description", "IsDeleted", "PermissionType" },
+                values: new object[] { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Default Permission", false, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoginHistories_UserId",

@@ -26,7 +26,8 @@ namespace Microservice.Identity.Domain.EntityConfigurations
 
             builder.HasMany(x => x.PermissionGroups).WithMany(x => x.Permissions);
 
-            builder.HasData(new Permission() { PermissionType = PermissionType.Default, Description = "Default Permission" });
+            builder.HasData(new Permission() {Id = 1, PermissionType = PermissionType.Default, Description = "Default Permission" },
+                            new Permission() {Id = 2, PermissionType = PermissionType.Admin, Description = "Admin Permission" });
 
         }
     }

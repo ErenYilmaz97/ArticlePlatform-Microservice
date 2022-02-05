@@ -4,6 +4,7 @@ using Microservice.Identity.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microservice.Identity.Domain.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220205103846_migration_1.0")]
+    partial class migration_10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,14 +89,6 @@ namespace Microservice.Identity.Domain.Migrations
                             Description = "Default Permission",
                             IsDeleted = false,
                             PermissionType = 1
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Admin Permission",
-                            IsDeleted = false,
-                            PermissionType = 0
                         });
                 });
 

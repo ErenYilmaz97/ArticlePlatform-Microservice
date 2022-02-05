@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microservice.Identity.Domain.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20211231110345_v1.0")]
-    partial class v10
+    [Migration("20220205104540_migration_1.1")]
+    partial class migration_11
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,24 @@ namespace Microservice.Identity.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permission");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Default Permission",
+                            IsDeleted = false,
+                            PermissionType = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Admin Permission",
+                            IsDeleted = false,
+                            PermissionType = 0
+                        });
                 });
 
             modelBuilder.Entity("Microservice.Identity.Domain.Entity.PermissionGroup", b =>
@@ -110,6 +128,9 @@ namespace Microservice.Identity.Domain.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

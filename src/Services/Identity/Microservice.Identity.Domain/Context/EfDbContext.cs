@@ -15,6 +15,11 @@ namespace Microservice.Identity.Domain.Context
 
         }
 
+        public EfDbContext()
+        {
+
+        }
+
 
         //Sync
         public override int SaveChanges()
