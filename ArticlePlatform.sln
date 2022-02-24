@@ -30,10 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{1C22
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.API.Gateway", "src\Gateway\Microservices.API.Gateway\Microservices.API.Gateway.csproj", "{4CCAC095-0922-48B0-91D2-DCDF0D44348D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.EventOrchestrator", "src\EventBus\Microservices.EventOrchestrator\Microservices.EventOrchestrator.csproj", "{0D785FB9-BB8A-4C5D-8616-0D96A26C8627}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.EventBus.Publisher", "src\EventBus\Microservices.EventBus.Publisher\Microservices.EventBus.Publisher.csproj", "{A015A18E-0CDD-4D1F-8D04-21999987DDF9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Core", "src\Core\Microservices.Core\Microservices.Core.csproj", "{D71A0224-C20E-473E-9696-38B8F5C6663A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservice.Identity.Domain", "src\Services\Identity\Microservice.Identity.Domain\Microservice.Identity.Domain.csproj", "{A63762E5-0D5C-47C1-974E-E69932490B1A}"
@@ -41,6 +37,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservice.Identity.Infrastructure", "src\Services\Identity\Microservice.Identity.Infrastructure\Microservice.Identity.Infrastructure.csproj", "{A14A4CFC-DF99-4ED9-B24C-9AAAFE8CB9E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservice.Identity.Application", "src\Services\Identity\Microservice.Identity.Application\Microservice.Identity.Application.csproj", "{88F10711-D231-484B-891A-4246D691E373}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.EventBus.Orchestrator", "src\EventBus\Microservices.EventBus.Orchestrator\Microservices.EventBus.Orchestrator.csproj", "{9ED50915-C395-4825-A636-F914553E209C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.EventBus.RabbitMQ", "src\EventBus\Microservices.EventBus.RabbitMQ\Microservices.EventBus.RabbitMQ.csproj", "{33965754-7668-471F-8949-84A1BC147328}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.EventBus.AzureServiceBus", "src\EventBus\Microservices.EventBus.AzureServiceBus\Microservices.EventBus.AzureServiceBus.csproj", "{14400DD9-DD3E-46FB-8924-61D41A02771B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,14 +58,6 @@ Global
 		{4CCAC095-0922-48B0-91D2-DCDF0D44348D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CCAC095-0922-48B0-91D2-DCDF0D44348D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CCAC095-0922-48B0-91D2-DCDF0D44348D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A015A18E-0CDD-4D1F-8D04-21999987DDF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A015A18E-0CDD-4D1F-8D04-21999987DDF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A015A18E-0CDD-4D1F-8D04-21999987DDF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A015A18E-0CDD-4D1F-8D04-21999987DDF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D71A0224-C20E-473E-9696-38B8F5C6663A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,6 +74,18 @@ Global
 		{88F10711-D231-484B-891A-4246D691E373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88F10711-D231-484B-891A-4246D691E373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88F10711-D231-484B-891A-4246D691E373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ED50915-C395-4825-A636-F914553E209C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ED50915-C395-4825-A636-F914553E209C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ED50915-C395-4825-A636-F914553E209C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ED50915-C395-4825-A636-F914553E209C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33965754-7668-471F-8949-84A1BC147328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33965754-7668-471F-8949-84A1BC147328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33965754-7668-471F-8949-84A1BC147328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33965754-7668-471F-8949-84A1BC147328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14400DD9-DD3E-46FB-8924-61D41A02771B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14400DD9-DD3E-46FB-8924-61D41A02771B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14400DD9-DD3E-46FB-8924-61D41A02771B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14400DD9-DD3E-46FB-8924-61D41A02771B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,12 +101,13 @@ Global
 		{2CEA4980-7FD9-4877-B72D-7BE6B1E0CFCA} = {4E83438B-562C-4EB3-A856-9CBB66823F8B}
 		{1C22EED6-0354-4530-92EC-34CCDDEC33CC} = {4E83438B-562C-4EB3-A856-9CBB66823F8B}
 		{4CCAC095-0922-48B0-91D2-DCDF0D44348D} = {1C22EED6-0354-4530-92EC-34CCDDEC33CC}
-		{0D785FB9-BB8A-4C5D-8616-0D96A26C8627} = {1950B748-0EBE-4393-85A8-20AF2760917F}
-		{A015A18E-0CDD-4D1F-8D04-21999987DDF9} = {1950B748-0EBE-4393-85A8-20AF2760917F}
 		{D71A0224-C20E-473E-9696-38B8F5C6663A} = {2CEA4980-7FD9-4877-B72D-7BE6B1E0CFCA}
 		{A63762E5-0D5C-47C1-974E-E69932490B1A} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
 		{A14A4CFC-DF99-4ED9-B24C-9AAAFE8CB9E5} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
 		{88F10711-D231-484B-891A-4246D691E373} = {42AE664E-8AC5-4441-AE23-563ED618F7A6}
+		{9ED50915-C395-4825-A636-F914553E209C} = {1950B748-0EBE-4393-85A8-20AF2760917F}
+		{33965754-7668-471F-8949-84A1BC147328} = {1950B748-0EBE-4393-85A8-20AF2760917F}
+		{14400DD9-DD3E-46FB-8924-61D41A02771B} = {1950B748-0EBE-4393-85A8-20AF2760917F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0747AB50-AC07-4831-8C40-7B440EC15F02}

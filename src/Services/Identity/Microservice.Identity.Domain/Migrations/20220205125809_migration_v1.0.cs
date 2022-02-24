@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Microservice.Identity.Domain.Migrations
 {
-    public partial class migration_10 : Migration
+    public partial class migration_v10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -222,6 +222,11 @@ namespace Microservice.Identity.Domain.Migrations
                 table: "Permission",
                 columns: new[] { "Id", "Created", "Description", "IsDeleted", "PermissionType" },
                 values: new object[] { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Default Permission", false, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Permission",
+                columns: new[] { "Id", "Created", "Description", "IsDeleted", "PermissionType" },
+                values: new object[] { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin Permission", false, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoginHistories_UserId",

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Microservice.Identity.Domain.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20220205104540_migration_1.1")]
-    partial class migration_11
+    [Migration("20220205125809_migration_v1.0")]
+    partial class migration_v10
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -178,6 +178,7 @@ namespace Microservice.Identity.Domain.Migrations
             modelBuilder.Entity("Microservice.Identity.Domain.Entity.User", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Created")

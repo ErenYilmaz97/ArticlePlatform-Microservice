@@ -176,6 +176,7 @@ namespace Microservice.Identity.Domain.Migrations
             modelBuilder.Entity("Microservice.Identity.Domain.Entity.User", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Created")
