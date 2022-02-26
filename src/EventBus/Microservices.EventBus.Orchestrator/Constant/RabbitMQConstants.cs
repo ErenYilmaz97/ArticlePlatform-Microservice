@@ -31,7 +31,7 @@ public class RabbitMQConstants
     #region Queue Bind Keys
     public const string OrchestratorQueueRouteKey = "Orchestrator.Event.";
     public const string IdentityQueueRouteKey = "Identity.Event.";
-    public const string UserQueueRouteKey = "User.Event*";
+    public const string UserQueueRouteKey = "User.Event.";
     public const string ChatQueueRouteKey = "Chat.Event.";
     public const string NotificationQueueRouteKey = "Notification.Event.";
     public const string ArticleQueueRouteKey = "Article.Event.";

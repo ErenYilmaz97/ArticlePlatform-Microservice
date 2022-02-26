@@ -18,8 +18,4 @@
       <ProjectReference Include="..\Microservices.EventBus.RabbitMQ\Microservices.EventBus.RabbitMQ.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Helper\" />
-    </ItemGroup>
-
 </Project>
