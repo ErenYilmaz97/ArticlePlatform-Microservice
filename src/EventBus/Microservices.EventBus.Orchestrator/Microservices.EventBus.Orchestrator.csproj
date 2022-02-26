@@ -9,12 +9,17 @@
     <ItemGroup>
         <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Microservices.EventBus.AzureServiceBus\Microservices.EventBus.AzureServiceBus.csproj" />
       <ProjectReference Include="..\Microservices.EventBus.RabbitMQ\Microservices.EventBus.RabbitMQ.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Helper\" />
     </ItemGroup>
 
 </Project>
